@@ -1,0 +1,73 @@
+<div class="topnav body">
+  <a (click)="NavigateHome()"><i class="fa fa-fw fa-home"></i> Home</a>
+  <a (click)="NavigateDailyReport()">Daily Report</a>
+  <a (click)="NavigateSlot()">Book Slot</a>
+
+  <div class="topnav-right">
+    <a class="active" (click)="refreshPage()">View Vaccines</a>
+    <a
+      (click)="NavigateViewRegistered()"
+      *ngIf="authService.currentUser.isAdmin === 'Y'"
+      >View Registered Users</a
+    >
+    <a
+      (click)="NavigateViewAll()"
+      *ngIf="authService.currentUser.isAdmin === 'Y'"
+      >View Users</a
+    >
+    <a href="#" (click)="logout()">Log Out</a>
+    <a
+      ><i class="fa fa-fw fa-user"></i>
+      {{ authService.currentUser.userName }}</a
+    >
+  </div>
+</div>
+<div class="header">
+  <a (click)="refreshPage()" class="logo active">Vaccines</a>
+</div>
+<div class="container">
+  <div class="input-group mb-3 mt-3" style="width: 40%">
+    <input
+      (keyup)="Search()"
+      [(ngModel)]="searchModel.name"
+      type="text"
+      class="form-control"
+      placeholder="Search"
+    />
+    <button
+      [disabled]="searchModel.name === ''"
+      (click)="Search()"
+      class="btn btn-success material-icons"
+    >
+      <span id="basic-addon2">search</span>
+    </button>
+  </div>
+
+  <div class="dropdown">
+    <table class="table mt-5 table-striped table-bordered table-hover">
+      <thead class="thead-dark">
+        <tr>
+          <th scope="col ">#</th>
+          <th scope="col ">VaccineName</th>
+          <th scope="col">Details</th>
+          <th scope="col">Company</th>
+          <th scope="col">Country</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let dt of vaccineCompanies; let i = index">
+          <th scope="row">{{ i + 1 }}</th>
+          <td>{{ dt.vaccineName }}</td>
+          <td>{{ dt.vaccineDetails }}</td>
+          <td>{{ dt.company.companyName }}</td>
+          <td>{{ dt.company.companyCountry }}</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="w3-panel w3-red w3-round-xxlarge" *ngIf="error_f">
+      <h3>Oops!</h3>
+      <p>Something Went Wrong</p>
+    </div>
+  </div>
+</div>

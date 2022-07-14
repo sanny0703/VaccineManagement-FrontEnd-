@@ -1,0 +1,78 @@
+<div class="topnav body">
+  <a (click)="NavigateHome()"><i class="fa fa-fw fa-home"></i> Home</a>
+  <a (click)="NavigateDailyReport()">Daily Report</a>
+  <a (click)="NavigateSlot()">Book Slot</a>
+
+  <div class="topnav-right">
+    <a (click)="NavigateVaccinesList()">View Vaccines</a>
+    <a (click)="NavigateRegistered()">View Registered Users</a>
+    <a class="active" (click)="refreshPage()">View Users</a>
+    <a href="#" (click)="logout()">Log Out</a>
+    <a
+      ><i class="fa fa-fw fa-user"></i>
+      {{ authService.currentUser.userName }}</a
+    >
+  </div>
+</div>
+<div class="header">
+  <a (click)="refreshPage()" class="logo active">ViewUsers</a>
+</div>
+<div class="my_div">
+  <div class="container">
+    <div class="input-group mb-3 mt-3" style="width: 40%">
+      <input
+        (keyup)="SearchByName()"
+        [(ngModel)]="searchModel.name"
+        type="text"
+        class="form-control"
+        placeholder="Search By Name"
+      />
+      <button
+        [disabled]="searchModel.name === ''"
+        class="btn btn-success material-icons"
+      >
+        <span id="basic-addon2">search</span>
+      </button>
+    </div>
+
+    <div class="row">
+      <div class="col-sm-3 my-2" *ngFor="let dt of data">
+        <div class="card">
+          <img
+            class="card-img-top img-fluid"
+            [src]="
+              dt.patientGender === 'M'
+                ? 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ8czzbrLzXJ9R_uhKyMiwj1iGxKhJtH7pwlQ&usqp=CAU'
+                : 'https://png.pngtree.com/png-vector/20210128/ourmid/pngtree-flat-office-avatar-png-image_2848892.jpg'
+            "
+            alt="Card image cap"
+          />
+          <div class="card-block">
+            <h4 class="card-title">{{ dt.patientName }}</h4>
+            <p class="card-text">
+              <strong class="my_space">Vaccine: </strong
+              >{{ dt.vaccineCompany.vaccineName }}
+            </p>
+            <p class="card-text">
+              <strong class="my_space">FirstDose: </strong>{{ dt.vaccineDate1 }}
+            </p>
+            <p class="card-text">
+              <strong class="my_space">SecondDose: </strong
+              >{{ dt.vaccineDate2 ? dt.vaccineDate2 : "NA" }}
+            </p>
+            <p class="card-text">
+              <small class="text-muted"
+                ><strong class="my_space">Status: </strong
+                >{{ dt.vaccineStatus }}</small
+              >
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="w3-panel w3-red w3-round-xxlarge" *ngIf="error_f">
+    <h3>Oops!</h3>
+    <p>Something Went Wrong</p>
+  </div>
+</div>

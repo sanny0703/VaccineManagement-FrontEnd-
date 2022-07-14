@@ -1,0 +1,84 @@
+<div class="topnav body">
+  <a (click)="NavigateHome()"><i class="fa fa-fw fa-home"></i> Home</a>
+  <div class="topnav-centered">
+    <a (click)="NavigateHome()">Vaccine Management</a>
+  </div>
+  <div class="topnav-right">
+    <a class="active" (click)="refreshPage()">Log In</a>
+    <a (click)="NavigateRegister()">Sign Up</a>
+  </div>
+</div>
+<div class="my_div">
+  <div class="container mt-2 my_div1">
+    <h1 class="mb-5">Login</h1>
+    <hr />
+
+    <form #loginform="ngForm" (ngSubmit)="OnSubmit(loginform)">
+      <div class="mb-3">
+        <label for="email" class="form-label"
+          ><strong>Email address</strong></label
+        >
+        <input
+          required
+          #email="ngModel"
+          email
+          type="email"
+          class="form-control"
+          id="email"
+          name="email"
+          aria-describedby="emailHelp"
+          [(ngModel)]="myUser.userEmail"
+        />
+
+        <span class="small text-danger" *ngIf="email.invalid && email.dirty"
+          >Email is required</span
+        >
+      </div>
+      <div class="mb-3">
+        <label for="exampleInputPassword1" class="form-label"
+          ><strong>Password</strong></label
+        >
+        <input
+          required
+          #password="ngModel"
+          minlength="4"
+          maxlength="10"
+          type="password"
+          class="form-control"
+          id="exampleInputPassword1"
+          name="password"
+          [(ngModel)]="myUser.userPassword"
+        />
+        <span
+          class="small text-danger"
+          *ngIf="password.invalid && password.dirty"
+          >Password is required</span
+        >
+      </div>
+
+      <button
+        mat-button
+        color="accent"
+        type="submit"
+        [disabled]="loginform.pristine || loginform.invalid"
+        class="btn btn-dark"
+      >
+        Sign In
+      </button>
+      <button
+        mat-button
+        type="button"
+        color="accent"
+        class="btn btn-dark mx-5"
+        (click)="NavigateRegister()"
+      >
+        Sign Up
+      </button>
+    </form>
+  </div>
+
+  <div class="w3-panel w3-red w3-round-xxlarge div3" *ngIf="invalid">
+    <h3>Oops!</h3>
+    <p>Please check the Credentials</p>
+  </div>
+</div>

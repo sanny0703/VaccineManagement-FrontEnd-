@@ -1,0 +1,107 @@
+<div class="topnav body">
+  <a (click)="NavigateHome()"><i class="fa fa-fw fa-home"></i> Home</a>
+  <a class="active" (click)="refreshPage()">Daily Report</a>
+  <a (click)="NavigateSlot()">Book Slot</a>
+
+  <div class="topnav-right">
+    <a (click)="NavigateVaccinesList()">View Vaccines</a>
+    <a
+      (click)="NavigateViewRegistered()"
+      *ngIf="authService.currentUser.isAdmin === 'Y'"
+      >View Registered Users</a
+    >
+    <a
+      (click)="NavigateViewAll()"
+      *ngIf="authService.currentUser.isAdmin === 'Y'"
+      >View Users</a
+    >
+
+    <a href="#" (click)="logout()">Log Out</a>
+    <a
+      ><i class="fa fa-fw fa-user"></i>
+      {{ authService.currentUser.userName }}</a
+    >
+  </div>
+</div>
+<div class="header">
+  <a (click)="refreshPage()" class="logo active">DailyReport</a>
+</div>
+<div class="my_div">
+  <div class="container">
+    <div class="container">
+      <div class="row">
+        <div class="col">
+          <div class="input-group mb-3 mt-3" style="width: 50%">
+            <input
+              [(ngModel)]="searchModel.date"
+              type="date"
+              class="form-control"
+              placeholder="Search"
+            />
+            <button
+              [disabled]="searchModel.date === undefined"
+              (click)="SearchByDate()"
+              class="btn btn-success material-icons"
+            >
+              <span id="basic-addon2">search</span>
+            </button>
+          </div>
+        </div>
+        <div class="col">
+          <div class="input-group mb-3 mt-3" style="width: 50%">
+            <input
+              (keyup)="SearchByName()"
+              [(ngModel)]="searchModel.name"
+              type="text"
+              class="form-control"
+              placeholder="Search By Vaccine"
+            />
+            <button
+              [disabled]="searchModel.name === ''"
+              (click)="SearchByName()"
+              class="btn btn-success material-icons"
+            >
+              <span id="basic-addon2">search</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="dropdown">
+      <table class="table mt-5 table-striped table-bordered table-hover">
+        <thead class="thead-dark">
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Report</th>
+            <th scope="col">Patient</th>
+            <th scope="col">Vaccine</th>
+            <th scope="col">Manufacturing company</th>
+            <th scope="col">slot Date</th>
+            <th scope="col">Vaccinated Time</th>
+            <th scope="col">Description</th>
+            <th scope="col">Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let dt of data; let i = index">
+            <th scope="row">{{ i + 1 }}</th>
+            <td>{{ dt.reportId }}</td>
+            <td>{{ dt.vaccine.patientName }}</td>
+            <td>{{ dt.vaccineName }}</td>
+            <td>{{ dt.company.companyName }}</td>
+            <td>{{ dt.reportDate }}</td>
+            <td>{{ dt.reportTime }}</td>
+            <td>{{ dt.reportDescription }}</td>
+            <td>{{ dt.reportStatus }}</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="w3-panel w3-red w3-round-xxlarge" *ngIf="error_f">
+        <h3>Oops!</h3>
+        <p>Something Went Wrong</p>
+      </div>
+    </div>
+  </div>
+</div>

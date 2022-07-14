@@ -1,0 +1,202 @@
+<div class="topnav body">
+  <a (click)="NavigateHome()"><i class="fa fa-fw fa-home"></i> Home</a>
+  <a (click)="NavigateDailyReport()">Daily Report</a>
+  <a class="active" (click)="refreshPage()">Book Slot</a>
+
+  <div class="topnav-right">
+    <a (click)="NavigateVaccinesList()">View Vaccines</a>
+    <a
+      (click)="NavigateViewRegistered()"
+      *ngIf="authService.currentUser.isAdmin === 'Y'"
+      >View Registered Users</a
+    >
+    <a
+      (click)="NavigateViewAll()"
+      *ngIf="authService.currentUser.isAdmin === 'Y'"
+      >View Users</a
+    >
+    <a href="#" (click)="logout()">Log Out</a>
+    <a
+      ><i class="fa fa-fw fa-user"></i>
+      {{ authService.currentUser.userName }}</a
+    >
+  </div>
+</div>
+<div class="main_div">
+  <div class="container">
+    <div class="container my_div">
+      <h1 class="text-primary mt-5">Vaccination</h1>
+      <hr />
+      <strong class="my-4"
+        >A vaccine activates our immune system without making us sick. Many
+        dangerous infectious diseases can be prevented in this simple and
+        effective way. A vaccine activates our immune system without making us
+        sick. Many dangerous infectious diseases can be prevented in this simple
+        and effective way.</strong
+      >
+      <div class="my-3">
+        <h1 class="text-primary mt-5">How vaccines work ?.</h1>
+        <hr />
+        <strong class="my-4"
+          >Vaccines teach your immune system how to create antibodies that
+          protect you from diseases. It's much safer for your immune system to
+          learn this through vaccination than by catching the diseases and
+          treating them. Once your immune system knows how to fight a disease,
+          it can often protect you for many years</strong
+        >
+      </div>
+    </div>
+
+    <div class="cntainer my_div1 mt-4">
+      <h1 class="text-success">Book A Slot</h1>
+      <hr />
+      <form (ngSubmit)="Submit(bookSlotForm)" #bookSlotForm="ngForm">
+        <div class="my-3">
+          <label for="name" class="form-label">Name</label>
+          <input
+            type="text"
+            minlength="5"
+            pattern="[a-z A-Z]*"
+            class="form-control"
+            name="name"
+            id="name"
+            [(ngModel)]="data.patientName"
+            #name="ngModel"
+            required
+          />
+          <p class="small text-danger" *ngIf="name.dirty && name.invalid">
+            name can't be empty !
+          </p>
+        </div>
+        <div class="my-3">
+          <label for="Age" class="form-label">Age</label>
+          <input
+            required
+            min="1"
+            max="90"
+            type="number"
+            class="form-control"
+            id="age"
+            name="age"
+            #age="ngModel"
+            [(ngModel)]="data.patientAge"
+          />
+          <p class="small text-danger" *ngIf="age.dirty && age.invalid">
+            age is required !
+          </p>
+        </div>
+        <div class="input-group my-3">
+          <select
+            required
+            class="form-select"
+            name="gender"
+            id="gender"
+            #gender="ngModel"
+            [(ngModel)]="data.patientGender"
+          >
+            <option value="M">Male</option>
+            <option value="F">Female</option>
+            <option value="C">Can't say</option>
+          </select>
+          <label class="input-group-text" for="gender"
+            ><strong>Gender</strong></label
+          >
+          <p class="small text-danger" *ngIf="gender.dirty && gender.invalid">
+            please select Gender !
+          </p>
+        </div>
+        <div class="my-3">
+          <label for="date">Date</label>
+          <input
+            [min]="min_date | date: 'yyyy/mm/dd'"
+            required
+            type="date"
+            id="date"
+            name="date"
+            #date="ngModel"
+            class="form-control"
+            [(ngModel)]="my_date"
+          />
+          <p class="small text-danger" *ngIf="date.dirty && date.invalid">
+            please select valid date !
+          </p>
+        </div>
+        <div class="input-group my-5">
+          <select
+            required
+            class="form-select"
+            name="dose"
+            id="dose"
+            #dose="ngModel"
+            [(ngModel)]="doseValue"
+          >
+            <option value="first">First</option>
+            <option value="second">Second</option>
+          </select>
+          <label class="input-group-text" for="dose"
+            ><strong>Dose</strong></label
+          >
+        </div>
+        <p class="small text-danger" *ngIf="dose.dirty && dose.invalid">
+          Please select Dose !
+        </p>
+        <div class="my-3" *ngIf="doseValue == 'second'">
+          <label for="date2"
+            >If Second Dose,Please enter your first dose Date</label
+          >
+          <input
+            required
+            type="date"
+            id="date2"
+            name="date2"
+            #date2="ngModel"
+            class="form-control"
+            [(ngModel)]="my_date2"
+          />
+          <p class="small text-danger" *ngIf="date2.dirty && date2.invalid">
+            please select valid date !
+          </p>
+        </div>
+        <div class="input-group my-5">
+          <select
+            required
+            class="form-select"
+            id="vaccine"
+            name="vaccine"
+            #vaccine="ngModel"
+            [(ngModel)]="vaccines_index"
+          >
+            <option [value]="i" *ngFor="let vaccine of vaccines; let i = index">
+              {{ vaccine.vaccineName }}
+            </option>
+          </select>
+          <label class="input-group-text" for="vaccine"
+            ><strong>Select Vaccine</strong></label
+          >
+        </div>
+        <p class="small text-danger" *ngIf="vaccine.dirty && vaccine.invalid">
+          please select a vaccine !
+        </p>
+        <button
+          type="submit"
+          class="btn btn-success"
+          [disabled]="bookSlotForm.pristine || bookSlotForm.invalid"
+        >
+          Book
+        </button>
+      </form>
+    </div>
+  </div>
+  <div
+    class="w3-panel w3-green w3-round-xxlarge"
+    style="width: 50%"
+    *ngIf="success"
+  >
+    <h3>Success!</h3>
+    <p>Booking Successful!!</p>
+  </div>
+  <div class="w3-panel w3-red w3-round-xxlarge" *ngIf="error_f">
+    <h3>Oops!</h3>
+    <p>Something went wrong!</p>
+  </div>
+</div>

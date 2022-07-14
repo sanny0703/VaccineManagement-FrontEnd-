@@ -1,0 +1,129 @@
+<div class="topnav body">
+  <a (click)="NavigateHome()"><i class="fa fa-fw fa-home"></i> Home</a>
+  <div class="topnav-centered">
+    <a (click)="NavigateHome()">Vaccine Management</a>
+  </div>
+  <div class="topnav-right">
+    <a (click)="NavigateSignIn()">Log In</a>
+
+    <a class="active" (click)="refreshPage()">Sign Up</a>
+  </div>
+</div>
+<div class="my_div">
+  <div>
+    <div class="container mt-2 my_div1">
+      <h1 class="mt-0 mb-5 text-dark"><strong>Sign Up</strong></h1>
+      <hr />
+      <form #signupform="ngForm" (ngSubmit)="OnSubmit(signupform)">
+        <div class="mb-3">
+          <label for="email" class="form-label text-dark"
+            ><strong>Email address</strong></label
+          >
+          <input
+            required
+            #email="ngModel"
+            email
+            type="email"
+            class="form-control"
+            id="email"
+            name="email"
+            aria-describedby="emailHelp"
+            [(ngModel)]="myUser.userEmail"
+          />
+
+          <span class="small text-danger" *ngIf="email.invalid && email.dirty"
+            >Email is invalid</span
+          >
+        </div>
+        <div class="mb-3">
+          <label for="name" class="form-label text-dark"
+            ><strong>Name</strong></label
+          >
+          <input
+            minlength="5"
+            required
+            #name="ngModel"
+            type="text"
+            class="form-control"
+            id="name"
+            name="name"
+            aria-describedby="emailHelp"
+            [(ngModel)]="myUser.userName"
+          />
+
+          <span class="small text-danger" *ngIf="name.invalid && name.dirty"
+            >Name is required</span
+          >
+        </div>
+        <div class="mb-3">
+          <label for="exampleInputPassword1" class="form-label text-dark"
+            ><strong>Password</strong></label
+          >
+          <input
+            required
+            #password="ngModel"
+            minlength="4"
+            maxlength="10"
+            type="password"
+            class="form-control"
+            id="password"
+            name="password"
+            [(ngModel)]="myUser.userPassword"
+          />
+          <span
+            class="small text-danger"
+            *ngIf="password.invalid && password.dirty"
+            >Password is required</span
+          >
+        </div>
+        <div class="mb-3">
+          <label for="aadhar" class="form-label text-dark"
+            ><strong>Aadhar</strong></label
+          >
+          <input
+            pattern="[0-9]*"
+            required
+            #aadhar="ngModel"
+            minlength="12"
+            maxlength="12"
+            type="text"
+            class="form-control"
+            id="aadhar"
+            name="aadhar"
+            [(ngModel)]="myUser.userAadhar"
+          />
+          <span class="small text-danger" *ngIf="aadhar.invalid && aadhar.dirty"
+            >Aadhar is invalid</span
+          >
+        </div>
+
+        <button
+          mat-button
+          color="accent"
+          type="submit"
+          [disabled]="signupform.pristine || signupform.invalid"
+          class="btn btn-dark"
+        >
+          Sign Up
+        </button>
+        <button
+          mat-button
+          type="button"
+          color="accent"
+          class="btn btn-dark mx-5"
+          (click)="NavigateSignIn()"
+        >
+          Sign In
+        </button>
+      </form>
+    </div>
+    <div class="w3-panel w3-green w3-round-xxlarge" *ngIf="success">
+      <h3>Success!</h3>
+      <p>Registration successful! Please sign in</p>
+    </div>
+    <div class="w3-panel w3-red w3-round-xxlarge" *ngIf="failure">
+      <h3>Oops!</h3>
+      <p>Registration Failed</p>
+    </div>
+  </div>
+</div>

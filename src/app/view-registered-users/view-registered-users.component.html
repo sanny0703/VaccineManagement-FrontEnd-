@@ -1,0 +1,76 @@
+<div class="topnav body">
+  <a (click)="NavigateHome()"><i class="fa fa-fw fa-home"></i> Home</a>
+  <a (click)="NavigateDailyReport()">Daily Report</a>
+  <a (click)="NavigateSlot()">Book Slot</a>
+
+  <div class="topnav-right">
+    <a (click)="NavigateVaccinesList()">View Vaccines</a>
+    <a class="active" (click)="refreshPage()">View Registered Users</a>
+    <a (click)="NavigateViewAll()">View Users</a>
+    <a href="#" (click)="logout()">Log Out</a>
+    <a
+      ><i class="fa fa-fw fa-user"></i>
+      {{ authservice.currentUser.userName }}</a
+    >
+  </div>
+</div>
+<div class="header1">
+  <a (click)="refreshPage()" class="logo">View Registered Users</a>
+</div>
+<div class="body1">
+  <div class="container">
+    <div class="input-group mb-3 mt-3" style="width: 40%">
+      <input
+        (keyup)="Search()"
+        [(ngModel)]="searchModel.name"
+        type="text"
+        class="form-control"
+        placeholder="Search By Name"
+      />
+      <button
+        [disabled]="searchModel.name === ''"
+        (click)="Search()"
+        class="btn btn-success material-icons"
+      >
+        <span id="basic-addon2">search</span>
+      </button>
+    </div>
+    <div class="dropdown"></div>
+    <div class="row">
+      <div class="col-sm-2 my-2" *ngFor="let dt of data">
+        <div class="card">
+          <img
+            class="card-img-top img-fluid"
+            src="https://www.seekpng.com/png/detail/115-1150053_avatar-png-transparent-png-royalty-free-default-user.png"
+            alt="Card image cap"
+          />
+          <div class="card-block">
+            <h4 class="card-title">{{ dt.userName }}</h4>
+            <p class="card-text">{{ dt.userEmail }}</p>
+            <p class="card-text">
+              <small class="text-muted">{{ dt.userAadhar }}</small>
+            </p>
+            <button
+              *ngIf="dt.isAdmin != 'Y'"
+              (click)="DeleteUser(dt.userId)"
+              class="btn btn-danger my-2"
+            >
+              Delete
+            </button>
+            <button
+              *ngIf="dt.isAdmin == 'Y'"
+              disabled
+              class="btn btn-success my-2"
+            >
+              Admin
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="w3-panel w3-red w3-round-xxlarge" *ngIf="error_f">
+    <h3>Oops!</h3>
+    <p>Something Went Wrong</p>
+  </div>
+</div>
