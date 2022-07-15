@@ -1,15 +1,24 @@
-<div class="topnav body">
+<div class="topnav ">
   <a (click)="NavigateHome()"><i class="fa fa-fw fa-home"></i> Home</a>
   <div class="topnav-centered">
-    <a (click)="NavigateHome()">Vaccine Management</a>
+    <a class="active" (click)="NavigateHome()">Vaccine Management</a>
   </div>
   <div class="topnav-right">
     <a class="active" (click)="refreshPage()">Log In</a>
     <a (click)="NavigateRegister()">Sign Up</a>
   </div>
 </div>
+
 <div class="my_div">
   <div class="container mt-2 my_div1">
+    <div
+      class="alert alert-danger d-flex align-items-center alert234"
+      role="alert"
+      *ngIf="invalid"
+    >
+      <span class="material-symbols-outlined"> report </span> Please Check your
+      credentials
+    </div>
     <h1 class="mb-5">Login</h1>
     <hr />
 
@@ -31,7 +40,7 @@
         />
 
         <span class="small text-danger" *ngIf="email.invalid && email.dirty"
-          >Email is required</span
+          > valid Email is required</span
         >
       </div>
       <div class="mb-3">
@@ -52,7 +61,7 @@
         <span
           class="small text-danger"
           *ngIf="password.invalid && password.dirty"
-          >Password is required</span
+          >Password must be atleast 4 characters</span
         >
       </div>
 
@@ -75,10 +84,5 @@
         Sign Up
       </button>
     </form>
-  </div>
-
-  <div class="w3-panel w3-red w3-round-xxlarge div3" *ngIf="invalid">
-    <h3>Oops!</h3>
-    <p>Please check the Credentials</p>
   </div>
 </div>

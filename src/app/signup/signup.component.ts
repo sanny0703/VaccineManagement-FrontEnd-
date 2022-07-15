@@ -25,8 +25,7 @@ export class SignupComponent implements OnInit {
     this.authService.addUser(this.myUser).subscribe({
       next: (r) => {
         if (r != null) {
-          this.myUser = new User();
-          signupform.form.markAsPristine();
+          this.NewForm(signupform)
           this.success = true;
           this.failure = false;
           console.log(r);
@@ -36,9 +35,16 @@ export class SignupComponent implements OnInit {
         }
       },
       error: (e) => {
-        alert('something went wrong');
+        this.success = false;
+        this.failure = true;
+        this.NewForm(signupform)
+
       },
     });
+  }
+  NewForm(signupform:any){
+      signupform.form.markAsPristine()
+      this.myUser = new User()
   }
   NavigateSignIn() {
     this.router.navigateByUrl('login');

@@ -88,15 +88,16 @@ export class SlotComponent implements OnInit {
                 next: (res) => {
                   this.success = true;
                   this.error_f = false;
+                  this.NewForm(bookSlotForm)
+                  
                 },
                 error: (e) => {
                   this.error_f = true;
                   this.success = false;
+                  this.NewForm(bookSlotForm)
                 },
               });
-            this.data = new Vaccine();
-            this.my_date = undefined;
-            bookSlotForm.form.markAsPristine();
+            this.NewForm(bookSlotForm)
           },
         });
     } else {
@@ -124,20 +125,26 @@ export class SlotComponent implements OnInit {
                 next: (res) => {
                   this.success = true;
                   this.error_f = false;
+                  this.NewForm(bookSlotForm)
                 },
                 error: (e) => {
                   this.error_f = true;
                   this.success = false;
+                  this.NewForm(bookSlotForm)
                 },
               });
-            this.data = new Vaccine();
-            this.my_date = undefined;
-            bookSlotForm.form.markAsPristine();
+            
           },
         });
     }
   }
-
+  NewForm(slotform:any){
+    slotform.form.markAsPristine()
+    this.data = new Vaccine()
+    this.my_date2 =undefined
+    this.my_date = undefined
+    this.doseValue =""
+  }
   NavigateHome() {
     this.router.navigateByUrl('home');
   }

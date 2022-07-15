@@ -1,7 +1,7 @@
 <div class="topnav body">
   <a (click)="NavigateHome()"><i class="fa fa-fw fa-home"></i> Home</a>
   <div class="topnav-centered">
-    <a (click)="NavigateHome()">Vaccine Management</a>
+    <a class="active" (click)="NavigateHome()">Vaccine Management</a>
   </div>
   <div class="topnav-right">
     <a (click)="NavigateSignIn()">Log In</a>
@@ -12,6 +12,22 @@
 <div class="my_div">
   <div>
     <div class="container mt-2 my_div1">
+      <div
+      class="alert alert-danger d-flex align-items-center alert234"
+      role="alert"
+      *ngIf="failure"
+    >
+      <span class="material-symbols-outlined"> report </span> Please Check your
+      credentials
+    </div>
+    <div
+      class="alert alert-success d-flex align-items-center alert234"
+      role="alert"
+      *ngIf="success"
+    >
+      <span class="material-symbols-outlined"> done </span> Sign Up successful, Please sign in
+    </div>
+
       <h1 class="mt-0 mb-5 text-dark"><strong>Sign Up</strong></h1>
       <hr />
       <form #signupform="ngForm" (ngSubmit)="OnSubmit(signupform)">
@@ -32,7 +48,7 @@
           />
 
           <span class="small text-danger" *ngIf="email.invalid && email.dirty"
-            >Email is invalid</span
+            > valid Email is required</span
           >
         </div>
         <div class="mb-3">
@@ -73,7 +89,7 @@
           <span
             class="small text-danger"
             *ngIf="password.invalid && password.dirty"
-            >Password is required</span
+            >Password must be atleast 4 characters</span
           >
         </div>
         <div class="mb-3">
@@ -93,7 +109,7 @@
             [(ngModel)]="myUser.userAadhar"
           />
           <span class="small text-danger" *ngIf="aadhar.invalid && aadhar.dirty"
-            >Aadhar is invalid</span
+            >Aadhar must be valid</span
           >
         </div>
 
@@ -116,14 +132,6 @@
           Sign In
         </button>
       </form>
-    </div>
-    <div class="w3-panel w3-green w3-round-xxlarge" *ngIf="success">
-      <h3>Success!</h3>
-      <p>Registration successful! Please sign in</p>
-    </div>
-    <div class="w3-panel w3-red w3-round-xxlarge" *ngIf="failure">
-      <h3>Oops!</h3>
-      <p>Registration Failed</p>
     </div>
   </div>
 </div>

@@ -2,7 +2,6 @@
   <a (click)="NavigateHome()"><i class="fa fa-fw fa-home"></i> Home</a>
   <a (click)="NavigateDailyReport()">Daily Report</a>
   <a class="active" (click)="refreshPage()">Book Slot</a>
-
   <div class="topnav-right">
     <a (click)="NavigateVaccinesList()">View Vaccines</a>
     <a
@@ -24,6 +23,21 @@
 </div>
 <div class="main_div">
   <div class="container">
+    <div
+      class="alert alert-danger d-flex align-items-center alert234"
+      role="alert"
+      *ngIf="error_f"
+    >
+      <span class="material-symbols-outlined"> report </span> Please Check your
+      credentials
+    </div>
+    <div
+      class="alert alert-success d-flex align-items-center alert234"
+      role="alert"
+      *ngIf="success"
+    >
+      <span class="material-symbols-outlined"> done </span> Booking Successful!!
+    </div>
     <div class="container my_div">
       <h1 class="text-primary mt-5">Vaccination</h1>
       <hr />
@@ -52,7 +66,9 @@
       <hr />
       <form (ngSubmit)="Submit(bookSlotForm)" #bookSlotForm="ngForm">
         <div class="my-3">
-          <label for="name" class="form-label">Name</label>
+          <label for="name" class="form-label text-success"
+            ><strong>Name</strong></label
+          >
           <input
             type="text"
             minlength="5"
@@ -69,7 +85,9 @@
           </p>
         </div>
         <div class="my-3">
-          <label for="Age" class="form-label">Age</label>
+          <label for="Age" class="form-label text-success"
+            ><strong>Age</strong></label
+          >
           <input
             required
             min="1"
@@ -98,7 +116,7 @@
             <option value="F">Female</option>
             <option value="C">Can't say</option>
           </select>
-          <label class="input-group-text" for="gender"
+          <label class="input-group-text text-success" for="gender"
             ><strong>Gender</strong></label
           >
           <p class="small text-danger" *ngIf="gender.dirty && gender.invalid">
@@ -106,7 +124,7 @@
           </p>
         </div>
         <div class="my-3">
-          <label for="date">Date</label>
+          <label class="text-success" for="date"><strong>Date</strong></label>
           <input
             [min]="min_date | date: 'yyyy/mm/dd'"
             required
@@ -133,7 +151,7 @@
             <option value="first">First</option>
             <option value="second">Second</option>
           </select>
-          <label class="input-group-text" for="dose"
+          <label class="input-group-text text-success" for="dose"
             ><strong>Dose</strong></label
           >
         </div>
@@ -141,8 +159,10 @@
           Please select Dose !
         </p>
         <div class="my-3" *ngIf="doseValue == 'second'">
-          <label for="date2"
-            >If Second Dose,Please enter your first dose Date</label
+          <label for="date2" class="text-success"
+            ><strong
+              >If Second Dose,Please enter your first dose Date</strong
+            ></label
           >
           <input
             required
@@ -170,7 +190,7 @@
               {{ vaccine.vaccineName }}
             </option>
           </select>
-          <label class="input-group-text" for="vaccine"
+          <label class="input-group-text text-success" for="vaccine"
             ><strong>Select Vaccine</strong></label
           >
         </div>
@@ -186,17 +206,5 @@
         </button>
       </form>
     </div>
-  </div>
-  <div
-    class="w3-panel w3-green w3-round-xxlarge"
-    style="width: 50%"
-    *ngIf="success"
-  >
-    <h3>Success!</h3>
-    <p>Booking Successful!!</p>
-  </div>
-  <div class="w3-panel w3-red w3-round-xxlarge" *ngIf="error_f">
-    <h3>Oops!</h3>
-    <p>Something went wrong!</p>
   </div>
 </div>

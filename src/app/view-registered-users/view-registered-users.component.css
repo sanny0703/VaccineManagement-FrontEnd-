@@ -1,10 +1,9 @@
 .body1 {
-  background-image: url("ban.jpg");
+  background: url("ban.jpg") no-repeat center center fixed;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
   background-size: cover;
-  background-repeat: round;
-  background-attachment: scroll;
-  background-color: aqua;
-  height: 100vh;
 }
 .card {
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);

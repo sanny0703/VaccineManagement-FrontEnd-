@@ -18,7 +18,12 @@ input.ng-valid{
     
 
 }
-
+.alert234 {
+  position: absolute;
+  top: 30px; 
+  width: 50%;
+  margin:0 auto;
+}
 .my_div{
     background-image: url("ban.jpg");
     background-size:  cover;

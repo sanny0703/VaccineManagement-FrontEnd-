@@ -10,6 +10,9 @@
   <a (click)="NavigateSlot()" *ngIf="authservice.currentUser.userName != ''"
     >Book Slot</a
   >
+  <div class="topnav-centered" *ngIf="authservice.currentUser.userName === ''">
+    <a class="active" (click)="refreshPage()">Vaccine Management</a>
+  </div>
 
   <div class="topnav-right">
     <a
@@ -49,224 +52,89 @@
     >
   </div>
 </div>
-<div class="row mt-2">
-  <div class="container-fluid">
-    <div
-      id="carouselExampleCaptions"
-      class="carousel slide"
-      data-bs-ride="carousel"
-    >
-      <div class="carousel-indicators">
-        <button
-          type="button"
-          data-bs-target="#carouselExampleCaptions"
-          data-bs-slide-to="0"
-          class="active"
-          aria-current="true"
-          aria-label="Slide 1"
-        ></button>
-        <button
-          type="button"
-          data-bs-target="#carouselExampleCaptions"
-          data-bs-slide-to="1"
-          aria-label="Slide 2"
-        ></button>
-        <button
-          type="button"
-          data-bs-target="#carouselExampleCaptions"
-          data-bs-slide-to="2"
-          aria-label="Slide 3"
-        ></button>
-      </div>
-      <div class="carousel-inner">
-        <div class="carousel-item active">
-          <img
-            src="https://www.ruralhealthinfo.org/assets/4049-17150/covid-vaccination-fb.jpg"
-            class="rounded"
-            style="width: 100%; height: 300px !important"
-            alt="..."
-          />
-          <div class="carousel-caption d-none d-md-block">
-            <h5 class="text-primary"><strong>Imunizations</strong></h5>
-            <p class="text-success">
-              Protect your family from getting diseases<strong></strong>
-            </p>
-          </div>
-        </div>
-        <div class="carousel-item">
-          <img
-            src="https://bsmedia.business-standard.com/_media/bs/img/article/2021-04/13/full/1618256499-5493.jpg"
-            class="rounded"
-            style="width: 100%; height: 300px !important"
-          />
-          <div class="carousel-caption d-none d-md-block">
-            <h5 class="text-danger">
-              <strong>Don't hesitate to Vaccinate</strong>
-            </h5>
-            <p class="text-success">
-              <strong>Keep your helath pristine, get the vaccine</strong>
-            </p>
-          </div>
-        </div>
-        <div class="carousel-item">
-          <img
-            src="https://chronicle.brightspotcdn.com/7e/92/e833ba194521b412c6cefa4e7045/vaccine-promo.jpg"
-            class="rounded"
-            style="width: 100%; height: 300px !important"
-            alt="..."
-          />
-          <div class="carousel-caption d-none d-md-block">
-            <h5 class="text-primary"><strong>Protect your world!!</strong></h5>
-            <p class="text-success">
-              <strong
-                >Vaccination: Your first line of defence against Corona</strong
-              >
-            </p>
-          </div>
-        </div>
-      </div>
-      <button
-        class="carousel-control-prev"
-        type="button"
-        data-bs-target="#carouselExampleCaptions"
-        data-bs-slide="prev"
-      >
-        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-        <span class="visually-hidden">Previous</span>
-      </button>
-      <button
-        class="carousel-control-next"
-        type="button"
-        data-bs-target="#carouselExampleCaptions"
-        data-bs-slide="next"
-      >
-        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-        <span class="visually-hidden">Next</span>
-      </button>
-    </div>
-  </div>
-  <div
-    *ngIf="authservice.currentUser.userName != ''"
-    class="col-lg-4 mt-3 d-flex align-items-stretch"
-  >
-    <div class="card border border-info">
+<div class="main_div">
+  <div class="card-group mt-3">
+    <div class="card bg-success">
+      <img
+        src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTC62Xy5TVj4_7VSHzB7DL6BLblJE1ulU2WXw&usqp=CAU"
+        style="height: 50%"
+        class="card-img-top"
+        alt="..."
+      />
       <div class="card-body">
-        <h5 class="card-title">Book A Slot</h5>
+        <h5 class="card-title">Vaccines work</h5>
         <p class="card-text">
-          Get Your Vaccination Safely at the Time of Your Appointment.
+          Immunization is a key component of primary health care and an
+          indisputable human right. It’s also one of the best health investments
+          money can buy. Vaccines are also critical to the prevention and
+          control of infectious disease outbreaks. They underpin global health
+          security and will be a vital tool in the battle against antimicrobial
+          resistance.
         </p>
-        <a (click)="NavigateSlot()" class="btn btn-success">Click Here</a>
+        <button [disabled]="authservice.currentUser.userName===''" (click)="NavigateSlot()" class="btn btn-danger">Book Your Slot</button>
       </div>
     </div>
-  </div>
-  <div
-    *ngIf="authservice.currentUser.userName != ''"
-    class="col-lg-4 mt-3 d-flex align-items-stretch"
-  >
-    <div class="card border border-info">
+    <div class="card bg-info">
+      <img
+        src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQlUeCvY6NOCfvPv3TnZC_45dX4bNYqkcGEZQ&usqp=CAU"
+        style="height: 50%"
+        class="card-img-top"
+        alt="..."
+      />
       <div class="card-body">
-        <h5 class="card-title">List Available Vaccines</h5>
+        <h5 class="card-title">Vaccines</h5>
         <p class="card-text">
-          Choose from the avialable Vaccines List Manufactured by different
-          Companies
+          A vaccine is a biological preparation that provides active acquired
+          immunity to a particular infectious disease. A vaccine typically
+          contains an agent that resembles a disease-causing microorganism and
+          is often made from weakened or killed forms of the microbe, its
+          toxins, or one of its surface proteins.
         </p>
-        <a (click)="NavigateVaccinesList()" class="btn btn-success"
-          >ClickHere</a
-        >
+        <button [disabled]="authservice.currentUser.userName===''" (click)="NavigateVaccinesList()" class="btn btn-success">Check vaccines Available</button>
+      </div>
+    </div>
+    <div class="card bg-primary">
+      <img
+        src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcREXdAITlg-uV5q1jG6Abxbr2dVcdjOCr_JXg&usqp=CAU"
+        class="card-img-top"
+        style="height: 50%"
+        alt="..."
+      />
+      <div class="card-body">
+        <h5 class="card-title">Vaccination Stats</h5>
+        <p class="card-text">
+          Vaccines for COVID-19 are critical tools for helping to bring the
+          pandemic under control when combined with effective testing, treatment
+          and existing prevention measures. Vaccinating the world against this
+          disease is the largest vaccine procurement and supply operation in
+          history and UNICEF is leading this effort on behalf of the Global
+          COVAX Facility.
+        </p>
+        <button [disabled]="authservice.currentUser.userName===''" (click)="NavigateDailyReport()" class="btn btn-success">Vaccination stats</button>
       </div>
     </div>
   </div>
-  <div class="col-lg-4 mt-3 d-flex align-items-stretch">
-    <div class="card border border-info">
-      <div class="card-body">
-        <h5 class="card-title">FaQs</h5>
-        <p class="card-text">Ask About Your queries</p>
-        <form #my_form="ngForm" (ngSubmit)="onsubmit(my_form)" class="d-flex">
-          <input
-            class="form-control me-1"
-            type="text"
-            placeholder="Your qns"
-            name="qns"
-            id="qns"
-            #qns="ngModel"
-            [(ngModel)]="quest"
-          />
-          <button class="btn btn-outline-danger" type="submit">Submit</button>
-        </form>
-      </div>
+  <div style="height: 300px" class="card bg-dark text-white mt-2">
+    <img
+      src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSAd-ql6yKoXHXHHugei_dGhpJLWWdRdj-6GA&usqp=CAU"
+      class="card-img"
+      alt="..."
+    />
+    <div class="card-img-overlay">
+      <h4 class="card-title text-info">Vaccine Management</h4>
+      <p class="card-text text-dark">
+        <strong>
+          <p class="text-dark">In the past 60 years, vaccines helped eradicate one disease (smallpox) and are close to eradicating another (polio).</p>
+        <p>Vaccines prevent more than 2.5 million deaths each year.</p>
+        <p>Scientific studies and reviews continue to show no relationship between vaccines and autism</p>
+        <p>Vaccines cause “herd immunity,” which means if the majority of people in a community have been vaccinated against a disease, an unvaccinated person is less likely to get sick because others are less likely to get sick and spread the disease.</p>
+        <p>Vaccines helped reduce measles deaths globally by 78% between 2000 and 2008. In sub-Saharan Africa, deaths dropped by 92% in the same period.</p>
+        </strong>
+        <div class="container mt-5 mx-0" *ngIf="authservice.currentUser.userName===''">
+          <strong><p>Please Login to Book your slot </p></strong>
+          <button (click)="NavigateSignIn()" class="btn btn-success">Login</button>
+        </div>
+        
     </div>
   </div>
 </div>
-
-<footer class="bg-light text-center text-lg-start mt-5">
-  <!-- Grid container -->
-  <div class="container p-4">
-    <!--Grid row-->
-    <div class="row">
-      <!--Grid column-->
-      <div class="col-lg-6 col-md-12 mb-4 mb-md-0">
-        <h5 class="text-uppercase">Ministry of Health</h5>
-
-        <p>
-          Stay aware of the latest information on the COVID-19 outbreak,
-          available on the national,state and local public health authority.
-          Many countries around the world have seen cases of COVID-19 and
-          several have seen outbreaks. Authorities in China and some other
-          countries have succeeded in slowing or stopping their outbreaks......
-          <a target="_blank" href="https://www.mohfw.gov.in/">(Click here)</a>
-        </p>
-      </div>
-      <!--Grid column-->
-
-      <!--Grid column-->
-      <div class="col-lg-6 col-md-12 mb-4 mb-md-0">
-        <h5 class="text-uppercase">WHO</h5>
-
-        <p>
-          For most people in most locations the risk of catching COVID-19 is
-          still low. However, there are now places around the world (cities or
-          areas) where the disease is spreading. For people living in, or
-          visiting, these areas the risk of catching COVID-19 is higher.
-          Governments and health authorities are taking vigorous action every
-          time a new......
-          <a target="_blank" href="https://www.who.int/">(Click here)</a>
-        </p>
-      </div>
-      <!--Grid column-->
-    </div>
-    <!--Grid row-->
-  </div>
-
-  <div
-    class="text-center p-3 bg-success bg-gradient shadow-lg p-3 mb-5 bg-body rounded"
-  >
-    <div class="row">
-      <div class="col-sm-2 text-light">
-        <i class="material-icons">local_phone</i> Helpline
-      </div>
-      <div class="col-sm-2 text-danger">|</div>
-      <div class="col-sm-2 text-light">
-        <p>
-          Health Ministry <br />
-          <a href="">7505381045</a>
-        </p>
-      </div>
-      <div class="col-sm-2 text-light">
-        <p>
-          Child <br />
-          <a href="">1045</a>
-        </p>
-      </div>
-      <div class="col-sm-2 text-light">
-        <p>Women <br /><a href=""> 1003</a></p>
-      </div>
-
-      <div class="col-sm-2 text-light">
-        <p>
-          Senior Citizen <br />
-          <a href="">14567</a>
-        </p>
-      </div>
-    </div>
-  </div>
-</footer>

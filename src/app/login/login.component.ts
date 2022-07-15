@@ -21,19 +21,22 @@ export class LoginComponent implements OnInit {
   OnSubmit(loginform: any) {
     this.authService.getUser(this.myUser.userEmail).subscribe({
       next: (r) => {
-        if (r) {
-          if (r.userPassword == this.myUser.userPassword) {
+        if (r != null) {
+          if (r.userPassword === this.myUser.userPassword) {
             this.authService.currentUser = r;
             loginform.form.markAsPristine();
             this.myUser = new User();
             this.NavigateHome();
+            this.invalid = false;
           } else {
             this.invalid = true;
+            this.myUser = new User();
+            loginform.form.markAsPristine();
           }
         }
       },
       error: (e) => {
-        alert('something went wrong');
+        alert('Something went wrong');
       },
     });
   }
