@@ -1,6 +1,7 @@
 import { formatDate } from '@angular/common';
-import { Component, OnInit, ViewChildren } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { NgToastService } from 'ng-angular-popup';
 import { DailyReport } from '../model/DailyReport';
 import { User } from '../model/User';
 import { Vaccine } from '../model/vaccine';
@@ -25,8 +26,6 @@ export class SlotComponent implements OnInit {
   data: Vaccine;
   doseValue: string = '';
   vaccines: VaccineCompany[];
-  success: boolean;
-  error_f: boolean;
   my_date?: Date = undefined;
   my_date2?: Date = undefined;
   min_date: Date = new Date();
@@ -37,20 +36,30 @@ export class SlotComponent implements OnInit {
     public router: Router,
     public vaccinesService: VaccineListService,
     public slotService: SlotServiceService,
-    public authService: AuthService
+    public authService: AuthService,
+    private toast: NgToastService
   ) {
     this.data = new Vaccine();
     this.vaccines = new Array<VaccineCompany>();
-    this.success = false;
-    this.error_f = false;
   }
 
   ngOnInit(): void {
-    this.vaccinesService.getAllVaccines().subscribe({
-      next: (res) => {
-        this.vaccines = res;
-      },
-    });
+    if (this.authService.currentUser.userName === '') {
+      this.NavigateHome();
+    } else {
+      this.vaccinesService.getAllVaccines().subscribe({
+        next: (res) => {
+          this.vaccines = res;
+        },
+        error: (e) => {
+          this.toast.error({
+            detail: '!!Ooops',
+            summary: 'Something went wrong',
+            duration: 6000,
+          });
+        },
+      });
+    }
   }
 
   Submit(bookSlotForm: any) {
@@ -86,18 +95,29 @@ export class SlotComponent implements OnInit {
               )
               .subscribe({
                 next: (res) => {
-                  this.success = true;
-                  this.error_f = false;
-                  this.NewForm(bookSlotForm)
-                  
+                  this.NewForm(bookSlotForm);
+                  this.toast.success({
+                    detail: 'Success',
+                    summary: 'Slot is booked Successfully',
+                    duration: 6000,
+                  });
                 },
                 error: (e) => {
-                  this.error_f = true;
-                  this.success = false;
-                  this.NewForm(bookSlotForm)
+                  this.toast.error({
+                    detail: '!!Booking Fail',
+                    summary: 'Something went wrong',
+                    duration: 6000,
+                  });
                 },
               });
-            this.NewForm(bookSlotForm)
+            this.NewForm(bookSlotForm);
+          },
+          error: (e) => {
+            this.toast.error({
+              detail: '!!Booking Fail',
+              summary: 'Something went wrong',
+              duration: 6000,
+            });
           },
         });
     } else {
@@ -123,27 +143,38 @@ export class SlotComponent implements OnInit {
               )
               .subscribe({
                 next: (res) => {
-                  this.success = true;
-                  this.error_f = false;
-                  this.NewForm(bookSlotForm)
+                  this.NewForm(bookSlotForm);
+                  this.toast.success({
+                    detail: 'Success',
+                    summary: 'Slot is booked Successfully',
+                    duration: 6000,
+                  });
                 },
                 error: (e) => {
-                  this.error_f = true;
-                  this.success = false;
-                  this.NewForm(bookSlotForm)
+                  this.toast.error({
+                    detail: '!!Booking Fail',
+                    summary: 'Something went wrong',
+                    duration: 6000,
+                  });
                 },
               });
-            
+          },
+          error: (e) => {
+            this.toast.error({
+              detail: '!!Booking Fail',
+              summary: 'Something went wrong',
+              duration: 6000,
+            });
           },
         });
     }
   }
-  NewForm(slotform:any){
-    slotform.form.markAsPristine()
-    this.data = new Vaccine()
-    this.my_date2 =undefined
-    this.my_date = undefined
-    this.doseValue =""
+  NewForm(slotform: any) {
+    slotform.form.markAsPristine();
+    this.data = new Vaccine();
+    this.my_date2 = undefined;
+    this.my_date = undefined;
+    this.doseValue = '';
   }
   NavigateHome() {
     this.router.navigateByUrl('home');

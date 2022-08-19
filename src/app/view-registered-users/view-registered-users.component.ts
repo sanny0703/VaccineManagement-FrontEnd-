@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 import { UsersViewService } from '../services/users-view.service';
 import { User } from '../model/User';
+import { NgToastService } from 'ng-angular-popup';
 @Component({
   selector: 'app-view-registered-users',
   templateUrl: './view-registered-users.component.html',
@@ -10,8 +11,6 @@ import { User } from '../model/User';
 })
 export class ViewRegisteredUsersComponent implements OnInit {
   data: User[];
-  success: boolean = false;
-  error_f: boolean = false;
   searchModel = {
     name: '',
   };
@@ -20,7 +19,7 @@ export class ViewRegisteredUsersComponent implements OnInit {
     public viewService: UsersViewService,
     public router: Router,
     public authservice: AuthService,
-   
+    private toast: NgToastService
   ) {
     this.data = new Array<User>();
   }
@@ -35,10 +34,13 @@ export class ViewRegisteredUsersComponent implements OnInit {
     this.viewService.getRegisteredUsers().subscribe({
       next: (res) => {
         this.data = res;
-        this.error_f = false;
       },
       error: (e) => {
-        this.error_f = true;
+        this.toast.error({
+          detail: '!!Oops',
+          summary: 'Something went wrong',
+          duration: 6000,
+        });
       },
     });
   }
@@ -51,10 +53,13 @@ export class ViewRegisteredUsersComponent implements OnInit {
         .subscribe({
           next: (res) => {
             this.data = res;
-            this.error_f = false;
           },
           error: (e) => {
-            this.error_f = true;
+            this.toast.error({
+              detail: '!!Oops',
+              summary: 'Something went wrong',
+              duration: 6000,
+            });
           },
         });
     }
@@ -65,7 +70,11 @@ export class ViewRegisteredUsersComponent implements OnInit {
         this.Show();
       },
       error: (e) => {
-        this.error_f = true;
+        this.toast.error({
+          detail: '!!Oops',
+          summary: 'Something went wrong',
+          duration: 6000,
+        });
       },
     });
   }

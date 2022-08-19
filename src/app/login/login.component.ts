@@ -1,5 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { NgToastService } from 'ng-angular-popup';
+import { AuthenticationRequest } from '../model/AuthenticationRequest';
 import { User } from '../model/User';
 import { AuthService } from '../services/auth.service';
 
@@ -8,35 +10,58 @@ import { AuthService } from '../services/auth.service';
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css'],
 })
-export class LoginComponent implements OnInit {
-  myUser: User;
-  invalid: boolean;
+export class LoginComponent implements OnInit, OnDestroy {
+  request: AuthenticationRequest;
+  errorMessage: string;
 
-  constructor(public router: Router, public authService: AuthService) {
-    this.myUser = new User();
-    this.invalid = false;
+  constructor(
+    public router: Router,
+    public authService: AuthService,
+    private toast: NgToastService
+  ) {
+    this.request = new AuthenticationRequest();
+    this.errorMessage = '';
   }
 
   ngOnInit(): void {}
   OnSubmit(loginform: any) {
-    this.authService.getUser(this.myUser.userEmail).subscribe({
-      next: (r) => {
-        if (r != null) {
-          if (r.userPassword === this.myUser.userPassword) {
-            this.authService.currentUser = r;
-            loginform.form.markAsPristine();
-            this.myUser = new User();
-            this.NavigateHome();
-            this.invalid = false;
-          } else {
-            this.invalid = true;
-            this.myUser = new User();
-            loginform.form.markAsPristine();
-          }
+    this.authService.login(this.request).subscribe({
+      next: (res) => {
+        this.authService.accessToken = res.jwt;
+        this.authService.currentUser.userId = res.id;
+        this.toast.success({
+          detail: 'Success',
+          summary: 'You are logged in successfully',
+          duration: 5000,
+        });
+        loginform.form.markAsPristine();
+        this.request = new AuthenticationRequest();
+        this.setCurrentUser();
+        this.NavigateHome();
+      },
+      error: (e) => {
+        loginform.form.setErrors({ invalid: true });
+        this.toast.error({
+          detail: '!Oops',
+          summary: 'Email or password does not match',
+          duration: 5000,
+        });
+      },
+    });
+  }
+  setCurrentUser() {
+    this.authService.getUser().subscribe({
+      next: (res) => {
+        if (res && res.userEmail !== '') {
+          this.authService.currentUser = res;
         }
       },
       error: (e) => {
-        alert('Something went wrong');
+        this.toast.error({
+          detail: '! SetUser Oops',
+          summary: 'Something went wrong, Please try Again',
+          duration: 5000,
+        });
       },
     });
   }
@@ -67,4 +92,5 @@ export class LoginComponent implements OnInit {
   NavigateDailyReport() {
     this.router.navigateByUrl('dailyReport');
   }
+  ngOnDestroy(): void {}
 }

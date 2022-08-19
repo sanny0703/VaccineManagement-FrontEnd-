@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { NgToastService } from 'ng-angular-popup';
 import { User } from '../model/User';
 import { Vaccine } from '../model/vaccine';
 import { AuthService } from '../services/auth.service';
@@ -11,8 +12,6 @@ import { UsersViewService } from '../services/users-view.service';
 })
 export class ViewUsersComponent implements OnInit {
   data: Vaccine[];
-  success: boolean = false;
-  error_f: boolean = false;
   searchModel = {
     name: '',
   };
@@ -20,7 +19,8 @@ export class ViewUsersComponent implements OnInit {
   constructor(
     public viewService: UsersViewService,
     public router: Router,
-    public authService: AuthService
+    public authService: AuthService,
+    private toast: NgToastService
   ) {
     this.data = new Array<Vaccine>();
   }
@@ -29,13 +29,16 @@ export class ViewUsersComponent implements OnInit {
     this.Show();
   }
   Show() {
-    this.viewService.getPatients().subscribe({
+    this.viewService.getVaccinesAdministered().subscribe({
       next: (res) => {
         this.data = res;
-        this.error_f = false;
       },
       error: (e) => {
-        this.error_f = true;
+        this.toast.error({
+          detail: '!!Oops',
+          summary: 'Something went wrong',
+          duration: 6000,
+        });
       },
     });
   }
@@ -43,15 +46,20 @@ export class ViewUsersComponent implements OnInit {
     if (this.searchModel.name === '') {
       this.Show();
     } else {
-      this.viewService.searchPatientsByName(this.searchModel.name).subscribe({
-        next: (res) => {
-          this.data = res;
-          this.error_f = false;
-        },
-        error: (e) => {
-          this.error_f = true;
-        },
-      });
+      this.viewService
+        .searchVaccinesByPatientName(this.searchModel.name)
+        .subscribe({
+          next: (res) => {
+            this.data = res;
+          },
+          error: (e) => {
+            this.toast.error({
+              detail: '!!Oops',
+              summary: 'Something went wrong',
+              duration: 6000,
+            });
+          },
+        });
     }
   }
   refreshPage() {

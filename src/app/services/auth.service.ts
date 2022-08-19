@@ -1,5 +1,10 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { NgToastService } from 'ng-angular-popup';
+import { catchError, Subject, EMPTY, throwError } from 'rxjs';
+import { AppUtils } from '../model/AppUtils';
+import { AuthenticationRequest } from '../model/AuthenticationRequest';
+import { AuthenticationResponse } from '../model/AuthenticationResponse';
 import { User } from '../model/User';
 
 @Injectable({
@@ -7,15 +12,30 @@ import { User } from '../model/User';
 })
 export class AuthService {
   currentUser: User;
+  accessToken: string;
+  SERVER_ERROR = ' Something went wrong, Please try again';
+  CLIENT_ERROR = ' Please check your credentials';
 
-  constructor(public http: HttpClient) {
+  constructor(private http: HttpClient, private toast: NgToastService) {
     this.currentUser = new User();
+    this.accessToken = '';
+  }
+  getUser() {
+    return this.http.get<User>(
+      AppUtils.API_ENDPOINT + '/user/' + this.currentUser.userId,
+      {
+        headers: { Authorization: 'Bearer ' + this.accessToken },
+      }
+    );
   }
 
-  addUser(user: User) {
-    return this.http.post<User>('http://localhost:8888/user', user);
+  login(autheRequest: AuthenticationRequest) {
+    return this.http.post<AuthenticationResponse>(
+      AppUtils.API_ENDPOINT + '/auth/login',
+      autheRequest
+    );
   }
-  getUser(email: string) {
-    return this.http.get<User>('http://localhost:8888/user/' + email);
+  signup(user: User) {
+    return this.http.post(AppUtils.API_ENDPOINT + '/auth/signup', user);
   }
 }

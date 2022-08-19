@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { NgToastService } from 'ng-angular-popup';
 import { User } from '../model/User';
 import { VaccineCompany } from '../model/VaccineCompany';
 import { AuthService } from '../services/auth.service';
@@ -13,20 +14,24 @@ import { VaccineListService } from '../services/vaccine-list.service';
 })
 export class VaccinesListComponent implements OnInit {
   vaccineCompanies: VaccineCompany[];
-  error_f: boolean = false;
   searchModel: any;
   constructor(
     public viewService: UsersViewService,
     public router: Router,
     public authService: AuthService,
-    public vaccineListService: VaccineListService
+    public vaccineListService: VaccineListService,
+    private toast: NgToastService
   ) {
     this.vaccineCompanies = new Array<VaccineCompany>();
     this.searchModel = { name: '' };
   }
 
   ngOnInit(): void {
-    this.Show();
+    if (this.authService.currentUser.userName === '') {
+      this.NavigateHome();
+    } else {
+      this.Show();
+    }
   }
   refreshPage() {
     this.router.navigateByUrl('vaccineList');
@@ -35,10 +40,13 @@ export class VaccinesListComponent implements OnInit {
     this.vaccineListService.getAllVaccines().subscribe({
       next: (res) => {
         this.vaccineCompanies = res;
-        this.error_f = false;
       },
       error: (e) => {
-        this.error_f = true;
+        this.toast.error({
+          detail: '!!Oops',
+          summary: 'Something went wrong',
+          duration: 6000,
+        });
       },
     });
   }
@@ -48,10 +56,13 @@ export class VaccinesListComponent implements OnInit {
       next: (res) => {
         this.vaccineCompanies = res;
         console.log(res);
-        this.error_f = false;
       },
       error: (e) => {
-        this.error_f = true;
+        this.toast.error({
+          detail: '!!Oops',
+          summary: 'Something went wrong',
+          duration: 6000,
+        });
       },
     });
   }

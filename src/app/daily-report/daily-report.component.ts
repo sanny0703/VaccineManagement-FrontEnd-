@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { NgToastService } from 'ng-angular-popup';
 import { DailyReport } from '../model/DailyReport';
 import { User } from '../model/User';
 import { AuthService } from '../services/auth.service';
@@ -12,24 +13,26 @@ import { DailyReportService } from '../services/daily-report.service';
 })
 export class DailyReportComponent implements OnInit {
   data: DailyReport[];
-  error_f: boolean;
   searchModel: any;
   constructor(
     private router: Router,
     public authService: AuthService,
-    private dailyReportService: DailyReportService
+    private dailyReportService: DailyReportService,
+    private toast: NgToastService
   ) {
     this.data = new Array<DailyReport>();
-    this.error_f = false;
     this.searchModel = {
       date: undefined,
       name: '',
     };
-    console.warn(this.searchModel.date);
   }
 
   ngOnInit(): void {
-    this.Show();
+    if (this.authService.currentUser.userName === '') {
+      this.router.navigateByUrl('home');
+    } else {
+      this.Show();
+    }
   }
   refreshPage() {
     this.ngOnInit();
@@ -38,10 +41,13 @@ export class DailyReportComponent implements OnInit {
     this.dailyReportService.getreports().subscribe({
       next: (res) => {
         this.data = res;
-        this.error_f = false;
       },
       error: (e) => {
-        this.error_f = true;
+        this.toast.error({
+          detail: '!!Ooops',
+          summary: 'Something went wrong,Please try again',
+          duration: 6000,
+        });
       },
     });
   }
@@ -52,10 +58,13 @@ export class DailyReportComponent implements OnInit {
       .subscribe({
         next: (res) => {
           this.data = res;
-          this.error_f = false;
         },
         error: (e) => {
-          this.error_f = true;
+          this.toast.error({
+            detail: '!!Ooops',
+            summary: 'Something went wrong,Please try again',
+            duration: 6000,
+          });
         },
       });
   }
@@ -68,10 +77,13 @@ export class DailyReportComponent implements OnInit {
         .subscribe({
           next: (res) => {
             this.data = res;
-            this.error_f = false;
           },
           error: (e) => {
-            this.error_f = true;
+            this.toast.error({
+              detail: '!!Ooops',
+              summary: 'Something went wrong,Please try again',
+              duration: 6000,
+            });
           },
         });
     }

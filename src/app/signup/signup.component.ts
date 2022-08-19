@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { NgToastService } from 'ng-angular-popup';
 import { User } from '../model/User';
 import { AuthService } from '../services/auth.service';
 
@@ -10,41 +11,39 @@ import { AuthService } from '../services/auth.service';
 })
 export class SignupComponent implements OnInit {
   public myUser: User;
-  success: boolean;
-  failure: boolean;
 
-  constructor(public router: Router, public authService: AuthService) {
+  constructor(
+    public router: Router,
+    public authService: AuthService,
+    private toast: NgToastService
+  ) {
     this.myUser = new User();
-    this.failure = false;
-    this.success = false;
   }
 
   ngOnInit(): void {}
   OnSubmit(signupform: any) {
-    this.myUser.userName = this.myUser.userName.replace(/\s*/g, '');
-    this.authService.addUser(this.myUser).subscribe({
+    this.myUser.userName = this.myUser.userName.replace(/\s*/g, ''); // removing spaces
+    this.authService.signup(this.myUser).subscribe({
       next: (r) => {
-        if (r != null) {
-          this.NewForm(signupform)
-          this.success = true;
-          this.failure = false;
-          console.log(r);
-        } else {
-          this.success = false;
-          this.failure = true;
-        }
+        this.NewForm(signupform);
+        this.toast.success({
+          detail: 'Success',
+          summary: 'Registration is Successful, Please LogIn',
+          duration: 6000,
+        });
       },
       error: (e) => {
-        this.success = false;
-        this.failure = true;
-        this.NewForm(signupform)
-
+        this.toast.error({
+          detail: 'Something went wrong',
+          summary: 'Use valid email & Aadhar',
+          duration: 6000,
+        });
       },
     });
   }
-  NewForm(signupform:any){
-      signupform.form.markAsPristine()
-      this.myUser = new User()
+  NewForm(signupform: any) {
+    signupform.form.markAsPristine();
+    this.myUser = new User();
   }
   NavigateSignIn() {
     this.router.navigateByUrl('login');

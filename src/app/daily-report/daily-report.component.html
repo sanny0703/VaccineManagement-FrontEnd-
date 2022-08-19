@@ -39,7 +39,10 @@
               placeholder="Search"
             />
             <button
-              [disabled]="searchModel.date === undefined"
+              [disabled]="
+                searchModel.date === undefined ||
+                searchModel.date === 'dd/mm/yyyy'
+              "
               (click)="SearchByDate()"
               class="btn btn-success material-icons"
             >
@@ -86,22 +89,33 @@
         <tbody>
           <tr *ngFor="let dt of data; let i = index">
             <th scope="row">{{ i + 1 }}</th>
-            <td>{{ dt.reportId }}</td>
-            <td>{{ dt.vaccine.patientName }}</td>
-            <td>{{ dt.vaccineName }}</td>
-            <td>{{ dt.company.companyName }}</td>
-            <td>{{ dt.reportDate }}</td>
-            <td>{{ dt.reportTime }}</td>
-            <td>{{ dt.reportDescription }}</td>
-            <td>{{ dt.reportStatus }}</td>
+            <td>
+              <strong>{{ dt.reportId }}</strong>
+            </td>
+            <td>
+              <strong>{{ dt.vaccine.patientName }}</strong>
+            </td>
+            <td>
+              <strong>{{ dt.vaccineName }}</strong>
+            </td>
+            <td>
+              <strong>{{ dt.company.companyName }}</strong>
+            </td>
+            <td>
+              <strong>{{ dt.reportDate }}</strong>
+            </td>
+            <td>
+              <strong>{{ dt.reportTime }}</strong>
+            </td>
+            <td>
+              <strong>{{ dt.reportDescription }}</strong>
+            </td>
+            <td>
+              <strong>{{ dt.reportStatus }}</strong>
+            </td>
           </tr>
         </tbody>
       </table>
-
-      <div class="w3-panel w3-red w3-round-xxlarge" *ngIf="error_f">
-        <h3>Oops!</h3>
-        <p>Something Went Wrong</p>
-      </div>
     </div>
   </div>
 </div>

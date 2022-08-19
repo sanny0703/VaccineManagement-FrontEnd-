@@ -1,17 +1,20 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { DailyReport } from '../model/DailyReport';
+import { AuthService } from './auth.service';
 @Injectable({
   providedIn: 'root',
 })
 export class DailyReportService {
-  constructor(public http: HttpClient) {}
+  myHeaders = { Authorization: 'b ' };
+  constructor(public http: HttpClient, public authService: AuthService) {}
   addReport(
     dailyReport: DailyReport,
     userId: any,
     vaccineId: any,
     companyId: any
   ) {
+    this.myHeaders['Authorization'] = 'Bearer ' + this.authService.accessToken;
     return this.http.post<DailyReport>(
       'http://localhost:8888/report/' +
         userId +
@@ -19,22 +22,30 @@ export class DailyReportService {
         vaccineId +
         '/' +
         companyId,
-      dailyReport
+      dailyReport,
+      { headers: this.myHeaders }
     );
   }
   getreports() {
-    return this.http.get<DailyReport[]>('http://localhost:8888/report');
+    this.myHeaders['Authorization'] = 'Bearer ' + this.authService.accessToken;
+    return this.http.get<DailyReport[]>('http://localhost:8888/report', {
+      headers: this.myHeaders,
+    });
   }
 
   searchReportsByDate(date: any) {
+    this.myHeaders['Authorization'] = 'Bearer ' + this.authService.accessToken;
     return this.http.get<DailyReport[]>(
-      'http://localhost:8888/report/date/' + date
+      'http://localhost:8888/report/date/' + date,
+      { headers: this.myHeaders }
     );
   }
 
   searchReportsByName(name: any) {
+    this.myHeaders['Authorization'] = 'Bearer ' + this.authService.accessToken;
     return this.http.get<DailyReport[]>(
-      'http://localhost:8888/report/vaccine/' + name
+      'http://localhost:8888/report/vaccine/' + name,
+      { headers: this.myHeaders }
     );
   }
 }
