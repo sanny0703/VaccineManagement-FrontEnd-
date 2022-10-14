@@ -33,6 +33,7 @@ import { NgToastModule } from 'ng-angular-popup';
     BrowserAnimationsModule,
     HttpClientModule,
     NgToastModule,
+  
   ],
   providers: [],
   bootstrap: [AppComponent],

@@ -25,21 +25,143 @@
   <a (click)="refreshPage()" class="logo active">Vaccines</a>
 </div>
 <div class="container">
-  <div class="input-group mb-3 mt-3" style="width: 40%">
-    <input
-      (keyup)="Search()"
-      [(ngModel)]="searchModel.name"
-      type="text"
-      class="form-control"
-      placeholder="Search"
-    />
-    <button
-      [disabled]="searchModel.name === ''"
-      (click)="Search()"
-      class="btn btn-success material-icons"
-    >
-      <span id="basic-addon2">search</span>
-    </button>
+  <div class="row">
+    <div class="col input-group mb-3 mt-3" style="width: 40%">
+      <input
+        (keyup)="Search()"
+        [(ngModel)]="searchModel.name"
+        type="text"
+        class="form-control"
+        placeholder="Search"
+      />
+      <button
+        [disabled]="searchModel.name === ''"
+        (click)="Search()"
+        class="btn btn-success material-icons"
+      >
+        <span id="basic-addon2">search</span>
+      </button>
+    </div>
+    <div *ngIf="authService.currentUser.isAdmin === 'Y'" class="col mb-3 mt-3">
+      <button (click)="displayCompanyForm()" class="btn btn-success">
+        addCompany
+      </button>
+    </div>
+    <div *ngIf="authService.currentUser.isAdmin === 'Y'" class="col mb-3 mt-3">
+      <button (click)="displayVaccineForm()" class="btn btn-success">
+        addVaccine
+      </button>
+    </div>
+  </div>
+  <div *ngIf="showCompanyForm" class="row g-3">
+    <div class="col-md">
+      <div class="form-floating">
+        <input
+          #name="ngModel"
+          [(ngModel)]="addName"
+          type="text"
+          class="form-control"
+          id="floatingInputGrid"
+          placeholder="companyName"
+        />
+        <label for="floatingInputGrid">Company Name</label>
+      </div>
+    </div>
+    <div class="col-md">
+      <div class="form-floating">
+        <select
+          #selection="ngModel"
+          [(ngModel)]="addSelection"
+          class="form-select"
+          id="floatingSelectGrid"
+          aria-label="Floating label select example"
+        >
+          <option *ngFor="let country of countries" value="{{ country.name }}">
+            {{ country.name }}
+          </option>
+        </select>
+        <label for="floatingSelectGrid">Country</label>
+      </div>
+    </div>
+    <div class="col-md">
+      <div class="form-floating">
+        <input
+          #details="ngModel"
+          [(ngModel)]="addDetails"
+          type="text"
+          class="form-control"
+          id="floatingInputGrid"
+          placeholder="companyName"
+        />
+        <label for="floatingInputGrid">Address</label>
+      </div>
+    </div>
+    <div class="col-md">
+      <button
+        (click)="addCompany()"
+        [disabled]="addName == '' || addDetails == ''"
+        class="btn btn-success my-2"
+      >
+        Add Company
+      </button>
+    </div>
+  </div>
+  <div *ngIf="showVaccineForm" class="row g-3">
+    <div class="col-md">
+      <div class="form-floating">
+        <input
+          #name="ngModel"
+          [(ngModel)]="addName"
+          type="text"
+          class="form-control"
+          id="floatingInputGrid"
+          placeholder="companyName"
+        />
+        <label for="floatingInputGrid">Vaccine Name</label>
+      </div>
+    </div>
+    <div class="col-md">
+      <div class="form-floating">
+        <select
+          #selection="ngModel"
+          [(ngModel)]="addSelection"
+          class="form-select"
+          id="floatingSelectGrid"
+          aria-label="Floating label select example"
+        >
+          <option
+            *ngFor="let company of companies; let i = index"
+            value="{{ i }}"
+          >
+            {{ company.companyName }}
+          </option>
+        </select>
+        <label for="floatingSelectGrid">Company</label>
+      </div>
+    </div>
+
+    <div class="col-md">
+      <div class="form-floating">
+        <input
+          #details="ngModel"
+          [(ngModel)]="addDetails"
+          type="text"
+          class="form-control"
+          id="floatingInputGrid"
+          placeholder="companyName"
+        />
+        <label for="floatingInputGrid">Details</label>
+      </div>
+    </div>
+    <div class="col-md">
+      <button
+        (click)="addVaccine()"
+        [disabled]="addName == '' || addDetails == ''"
+        class="btn btn-success my-2"
+      >
+        Add Vaccine
+      </button>
+    </div>
   </div>
 
   <div class="dropdown">
