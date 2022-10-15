@@ -1,10 +1,9 @@
 .my_div {
-  background-image: url("ban.jpg");
+  background: url("ban.jpg") no-repeat center center fixed;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
   background-size: cover;
-  background-repeat: no-repeat;
-  z-index: -1;
-
-  height: 100vh;
 }
 .cardw3 {
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);

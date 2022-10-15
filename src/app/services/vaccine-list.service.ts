@@ -19,7 +19,7 @@ export class VaccineListService {
   searchVaccines(name: string) {
     this.myHeaders['Authorization'] = 'Bearer ' + this.authService.accessToken;
     return this.http.get<VaccineCompany[]>(
-      'http://localhost:8888/vaccine_company/' + name,
+      'http://localhost:8888/vaccine_company/searchByName/' + name,
       { headers: this.myHeaders }
     );
   }

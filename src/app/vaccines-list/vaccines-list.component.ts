@@ -76,6 +76,10 @@ export class VaccinesListComponent implements OnInit {
   }
 
   Search() {
+    if(this.searchModel.name =='') {
+      this.Show()
+      return;
+    }
     this.vaccineListService.searchVaccines(this.searchModel.name).subscribe({
       next: (res) => {
         this.vaccineCompanies = res;
