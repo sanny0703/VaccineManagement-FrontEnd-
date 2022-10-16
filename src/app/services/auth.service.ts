@@ -6,6 +6,7 @@ import { AppUtils } from '../model/AppUtils';
 import { AuthenticationRequest } from '../model/AuthenticationRequest';
 import { AuthenticationResponse } from '../model/AuthenticationResponse';
 import { User } from '../model/User';
+import { LocalStoreService } from './local-store.service';
 
 @Injectable({
   providedIn: 'root',
