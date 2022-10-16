@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { AppUtils } from '../model/AppUtils';
 import { VaccineCompany } from '../model/VaccineCompany';
 import { AuthService } from './auth.service';
 
@@ -7,20 +8,17 @@ import { AuthService } from './auth.service';
   providedIn: 'root',
 })
 export class VaccineListService {
-  myHeaders = { Authorization: 'B ' };
   constructor(private http: HttpClient, private authService: AuthService) {}
   getAllVaccines() {
-    this.myHeaders['Authorization'] = 'Bearer ' + this.authService.accessToken;
     return this.http.get<VaccineCompany[]>(
-      'http://localhost:8888/vaccine_company',
-      { headers: this.myHeaders }
+      AppUtils.API_ENDPOINT + '/vaccine_company',
+      { headers: { Authorization: 'Bearer ' + this.authService.accessToken } }
     );
   }
   searchVaccines(name: string) {
-    this.myHeaders['Authorization'] = 'Bearer ' + this.authService.accessToken;
     return this.http.get<VaccineCompany[]>(
-      'http://localhost:8888/vaccine_company/searchByName/' + name,
-      { headers: this.myHeaders }
+      AppUtils.API_ENDPOINT + '/vaccine_company/searchByName/' + name,
+      { headers: { Authorization: 'Bearer ' + this.authService.accessToken } }
     );
   }
 }

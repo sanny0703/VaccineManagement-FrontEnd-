@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { User } from '../model/User';
 import { AuthService } from '../services/auth.service';
 
 @Component({
@@ -13,7 +12,10 @@ export class HomeComponent implements OnInit {
 
   constructor(public router: Router, public authservice: AuthService) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    // trying to fetch the user if local storage has user
+    this.authservice.getUser();
+  }
   NavigateSlot() {
     this.router.navigateByUrl('bookSlot');
   }
@@ -27,7 +29,7 @@ export class HomeComponent implements OnInit {
     this.router.navigateByUrl('view_all');
   }
   logout() {
-    this.authservice.currentUser = new User();
+    this.authservice.logout();
   }
   refreshPage() {
     this.router.navigateByUrl('home');

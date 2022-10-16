@@ -1,11 +1,11 @@
 import { formatDate } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { NgToastService } from 'ng-angular-popup';
 import { DailyReport } from '../model/DailyReport';
 import { User } from '../model/User';
 import { Vaccine } from '../model/vaccine';
 import { VaccineCompany } from '../model/VaccineCompany';
+import { AlertService } from '../services/alert.service';
 import { AuthService } from '../services/auth.service';
 import { DailyReportService } from '../services/daily-report.service';
 import { SlotServiceService } from '../services/slot-service.service';
@@ -37,13 +37,14 @@ export class SlotComponent implements OnInit {
     public vaccinesService: VaccineListService,
     public slotService: SlotServiceService,
     public authService: AuthService,
-    private toast: NgToastService
+    private notifier: AlertService
   ) {
     this.data = new Vaccine();
     this.vaccines = new Array<VaccineCompany>();
   }
 
   ngOnInit(): void {
+    this.authService.getUser();
     if (this.authService.currentUser.userName === '') {
       this.NavigateHome();
     } else {
@@ -52,18 +53,13 @@ export class SlotComponent implements OnInit {
           this.vaccines = res;
         },
         error: (e) => {
-          this.toast.error({
-            detail: '!!Ooops',
-            summary: 'Something went wrong',
-            duration: 6000,
-          });
+          this.notifier.notifyError('Something went wrong');
         },
       });
     }
   }
 
   Submit(bookSlotForm: any) {
-    this.data.patientName = this.data.patientName.replace(/\s*/g, '');
     this.userId = this.authService.currentUser.userId;
     this.companyId = this.vaccines[this.vaccines_index].company.companyId;
     this.report.vaccineName = this.vaccines[this.vaccines_index].vaccineName;
@@ -96,28 +92,16 @@ export class SlotComponent implements OnInit {
               .subscribe({
                 next: (res) => {
                   this.NewForm(bookSlotForm);
-                  this.toast.success({
-                    detail: 'Success',
-                    summary: 'Slot is booked Successfully',
-                    duration: 6000,
-                  });
+                  this.notifier.notifySuccess('Slot is booked Successfully');
                 },
                 error: (e) => {
-                  this.toast.error({
-                    detail: '!!Booking Fail',
-                    summary: 'Something went wrong',
-                    duration: 6000,
-                  });
+                  this.notifier.notifyError('Something went wrong');
                 },
               });
             this.NewForm(bookSlotForm);
           },
           error: (e) => {
-            this.toast.error({
-              detail: '!!Booking Fail',
-              summary: 'Something went wrong',
-              duration: 6000,
-            });
+            this.notifier.notifyError('Something went wrong');
           },
         });
     } else {
@@ -144,27 +128,15 @@ export class SlotComponent implements OnInit {
               .subscribe({
                 next: (res) => {
                   this.NewForm(bookSlotForm);
-                  this.toast.success({
-                    detail: 'Success',
-                    summary: 'Slot is booked Successfully',
-                    duration: 6000,
-                  });
+                  this.notifier.notifySuccess('Slot is booked Successfully');
                 },
                 error: (e) => {
-                  this.toast.error({
-                    detail: '!!Booking Fail',
-                    summary: 'Something went wrong',
-                    duration: 6000,
-                  });
+                  this.notifier.notifyError('Something went wrong');
                 },
               });
           },
           error: (e) => {
-            this.toast.error({
-              detail: '!!Booking Fail',
-              summary: 'Something went wrong',
-              duration: 6000,
-            });
+            this.notifier.notifyError('Something went wrong');
           },
         });
     }
@@ -197,6 +169,6 @@ export class SlotComponent implements OnInit {
     this.router.navigateByUrl('dailyReport');
   }
   logout() {
-    this.authService.currentUser = new User();
+    this.authService.logout();
   }
 }

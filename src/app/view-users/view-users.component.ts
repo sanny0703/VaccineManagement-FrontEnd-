@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { NgToastService } from 'ng-angular-popup';
 import { User } from '../model/User';
 import { Vaccine } from '../model/vaccine';
+import { AlertService } from '../services/alert.service';
 import { AuthService } from '../services/auth.service';
 import { UsersViewService } from '../services/users-view.service';
 @Component({
@@ -20,12 +20,13 @@ export class ViewUsersComponent implements OnInit {
     public viewService: UsersViewService,
     public router: Router,
     public authService: AuthService,
-    private toast: NgToastService
+    private notifier: AlertService
   ) {
     this.data = new Array<Vaccine>();
   }
 
   ngOnInit(): void {
+    this.authService.getUser();
     this.Show();
   }
   Show() {
@@ -34,11 +35,7 @@ export class ViewUsersComponent implements OnInit {
         this.data = res;
       },
       error: (e) => {
-        this.toast.error({
-          detail: '!!Oops',
-          summary: 'Something went wrong',
-          duration: 6000,
-        });
+        this.notifier.notifyError('Something went wrong');
       },
     });
   }
@@ -53,11 +50,7 @@ export class ViewUsersComponent implements OnInit {
             this.data = res;
           },
           error: (e) => {
-            this.toast.error({
-              detail: '!!Oops',
-              summary: 'Something went wrong',
-              duration: 6000,
-            });
+            this.notifier.notifyError('Something went wrong');
           },
         });
     }
@@ -84,6 +77,6 @@ export class ViewUsersComponent implements OnInit {
     this.router.navigateByUrl('dailyReport');
   }
   logout() {
-    this.authService.currentUser = new User();
+    this.authService.logout()
   }
 }

@@ -1,9 +1,10 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { NgToastService } from 'ng-angular-popup';
+import { AppUtils } from '../model/AppUtils';
 import { AuthenticationRequest } from '../model/AuthenticationRequest';
-import { User } from '../model/User';
+import { AlertService } from '../services/alert.service';
 import { AuthService } from '../services/auth.service';
+import { LocalStoreService } from '../services/local-store.service';
 
 @Component({
   selector: 'app-login',
@@ -12,56 +13,37 @@ import { AuthService } from '../services/auth.service';
 })
 export class LoginComponent implements OnInit, OnDestroy {
   request: AuthenticationRequest;
-  errorMessage: string;
 
   constructor(
     public router: Router,
     public authService: AuthService,
-    private toast: NgToastService
+    private notifier: AlertService,
+    private localStore: LocalStoreService
   ) {
     this.request = new AuthenticationRequest();
-    this.errorMessage = '';
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {this.authService.logout()}
   OnSubmit(loginform: any) {
     this.authService.login(this.request).subscribe({
       next: (res) => {
-        this.authService.accessToken = res.jwt;
-        this.authService.currentUser.userId = res.id;
-        this.toast.success({
-          detail: 'Success',
-          summary: 'You are logged in successfully',
-          duration: 5000,
-        });
+        if (res.body == null) {
+          // handling un authorized requests
+          this.notifier.notifyError("Password or Email doesn't match");
+          return;
+        }
+        this.authService.currentUser.userId = res.body.id;
+        this.authService.accessToken = res.body.jwt;
+        this.notifier.notifySuccess('You are logged in successfully');
+        // stroing the login info to local Storage(encrypted:))
+        this.localStore.storeData(AppUtils.TOKEN, res.body.jwt);
         loginform.form.markAsPristine();
         this.request = new AuthenticationRequest();
-        this.setCurrentUser();
         this.NavigateHome();
       },
       error: (e) => {
         loginform.form.setErrors({ invalid: true });
-        this.toast.error({
-          detail: '!Oops',
-          summary: 'Email or password does not match',
-          duration: 5000,
-        });
-      },
-    });
-  }
-  setCurrentUser() {
-    this.authService.getUser().subscribe({
-      next: (res) => {
-        if (res && res.userEmail !== '') {
-          this.authService.currentUser = res;
-        }
-      },
-      error: (e) => {
-        this.toast.error({
-          detail: '! SetUser Oops',
-          summary: 'Something went wrong, Please try Again',
-          duration: 5000,
-        });
+        this.notifier.notifyError('Something went wrong');
       },
     });
   }
@@ -71,26 +53,12 @@ export class LoginComponent implements OnInit, OnDestroy {
   NavigateHome() {
     this.router.navigateByUrl('home');
   }
-  NavigateSlot() {
-    this.router.navigateByUrl('bookSlot');
-  }
-  NavigateVaccinesList() {
-    this.router.navigateByUrl('vaccineList');
-  }
-  NavigateViewRegistered() {
-    this.router.navigateByUrl('view_registered');
-  }
-  NavigateViewAll() {
-    this.router.navigateByUrl('view_all');
-  }
   logout() {
-    this.authService.currentUser = new User();
+    this.authService.logout();
   }
   refreshPage() {
     this.router.navigateByUrl('login');
   }
-  NavigateDailyReport() {
-    this.router.navigateByUrl('dailyReport');
-  }
+
   ngOnDestroy(): void {}
 }

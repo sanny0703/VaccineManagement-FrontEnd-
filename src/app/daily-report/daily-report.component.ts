@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { NgToastService } from 'ng-angular-popup';
 import { DailyReport } from '../model/DailyReport';
 import { User } from '../model/User';
+import { AlertService } from '../services/alert.service';
 import { AuthService } from '../services/auth.service';
 import { DailyReportService } from '../services/daily-report.service';
 
@@ -18,7 +19,7 @@ export class DailyReportComponent implements OnInit {
     private router: Router,
     public authService: AuthService,
     private dailyReportService: DailyReportService,
-    private toast: NgToastService
+    private notifier: AlertService
   ) {
     this.data = new Array<DailyReport>();
     this.searchModel = {
@@ -28,6 +29,7 @@ export class DailyReportComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.authService.getUser();
     if (this.authService.currentUser.userName === '') {
       this.router.navigateByUrl('home');
     } else {
@@ -43,11 +45,7 @@ export class DailyReportComponent implements OnInit {
         this.data = res;
       },
       error: (e) => {
-        this.toast.error({
-          detail: '!!Ooops',
-          summary: 'Something went wrong,Please try again',
-          duration: 6000,
-        });
+        this.notifier.notifyError('Something went wrong,Please try again');
       },
     });
   }
@@ -60,11 +58,7 @@ export class DailyReportComponent implements OnInit {
           this.data = res;
         },
         error: (e) => {
-          this.toast.error({
-            detail: '!!Ooops',
-            summary: 'Something went wrong,Please try again',
-            duration: 6000,
-          });
+          this.notifier.notifyError('Something went wrong,Please try again');
         },
       });
   }
@@ -79,11 +73,7 @@ export class DailyReportComponent implements OnInit {
             this.data = res;
           },
           error: (e) => {
-            this.toast.error({
-              detail: '!!Ooops',
-              summary: 'Something went wrong,Please try again',
-              duration: 6000,
-            });
+            this.notifier.notifyError('Something went wrong,Please try again');
           },
         });
     }
@@ -101,7 +91,7 @@ export class DailyReportComponent implements OnInit {
     this.router.navigateByUrl('view_all');
   }
   logout() {
-    this.authService.currentUser = new User();
+    this.authService.logout();
   }
   NavigateHome() {
     this.router.navigateByUrl('home');

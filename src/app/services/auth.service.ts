@@ -1,7 +1,5 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { NgToastService } from 'ng-angular-popup';
-import { catchError, Subject, EMPTY, throwError } from 'rxjs';
 import { AppUtils } from '../model/AppUtils';
 import { AuthenticationRequest } from '../model/AuthenticationRequest';
 import { AuthenticationResponse } from '../model/AuthenticationResponse';
@@ -14,29 +12,75 @@ import { LocalStoreService } from './local-store.service';
 export class AuthService {
   currentUser: User;
   accessToken: string;
-  SERVER_ERROR = ' Something went wrong, Please try again';
-  CLIENT_ERROR = ' Please check your credentials';
 
-  constructor(private http: HttpClient, private toast: NgToastService) {
+  constructor(private http: HttpClient, private localStore: LocalStoreService) {
     this.currentUser = new User();
     this.accessToken = '';
   }
-  getUser() {
-    return this.http.get<User>(
-      AppUtils.API_ENDPOINT + '/user/' + this.currentUser.userId,
-      {
-        headers: { Authorization: 'Bearer ' + this.accessToken },
+  public getUser() {
+    this.getToken();
+    // getting the currentUser
+    if (this.currentUser.userName == '') {
+      if (this.localStore.getData(AppUtils.USER) != '') {
+        // if local storage has user
+        this.getUserFromLocalStore();
+      } else if (
+        this.currentUser.userId != 0 &&
+        this.currentUser.userId != undefined
+      ) {
+        //if user data not in local store, fetch from database if userId is not null
+        this.http
+          .get<User>(
+            AppUtils.API_ENDPOINT + '/user/' + this.currentUser.userId,
+            {
+              headers: { Authorization: 'Bearer ' + this.accessToken },
+            }
+          )
+          .subscribe({
+            next: (res) => {
+              this.currentUser = res;
+              // store the fetched user data(encrypted :))
+              this.localStore.storeData(
+                AppUtils.USER,
+                JSON.stringify(this.currentUser)
+              );
+            },
+          });
       }
-    );
+    }
+  }
+  private getToken() {
+    if (this.accessToken == '') {
+      if (this.localStore.getData(AppUtils.TOKEN) != '') {
+        this.accessToken = this.localStore.getData(AppUtils.TOKEN);
+      }
+    }
+  }
+  private getUserFromLocalStore() {
+    const user = JSON.parse(this.localStore.getData(AppUtils.USER));
+    this.currentUser.userId = user.userId;
+    this.currentUser.userEmail = user.userEmail;
+    this.currentUser.userPassword = user.userPassword;
+    this.currentUser.userName = user.userName;
+    this.currentUser.userAadhar = user.userAadhar;
+    this.currentUser.isAdmin = user.isAdmin;
   }
 
-  login(autheRequest: AuthenticationRequest) {
+  public login(autheRequest: AuthenticationRequest) {
     return this.http.post<AuthenticationResponse>(
       AppUtils.API_ENDPOINT + '/auth/login',
-      autheRequest
+      autheRequest,
+      { observe: 'response' }
     );
   }
-  signup(user: User) {
-    return this.http.post(AppUtils.API_ENDPOINT + '/auth/signup', user);
+  public signup(user: User) {
+    return this.http.post(AppUtils.API_ENDPOINT + '/auth/signup', user, {
+      observe: 'response',
+    });
+  }
+  public logout() {
+    this.localStore.clearData();
+    this.currentUser = new User();
+    this.accessToken = '';
   }
 }

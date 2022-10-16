@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { NgToastService } from 'ng-angular-popup';
 import { Company } from '../model/Company';
 import { countriesList } from '../model/Country_data';
 import { User } from '../model/User';
@@ -10,6 +9,7 @@ import { UsersViewService } from '../services/users-view.service';
 import { VaccineListService } from '../services/vaccine-list.service';
 import { CompanyService } from '../services/company.service';
 import { VaccineCompanyService } from '../services/vaccine-company.service';
+import { AlertService } from '../services/alert.service';
 
 @Component({
   selector: 'app-vaccines-list',
@@ -32,7 +32,7 @@ export class VaccinesListComponent implements OnInit {
     public router: Router,
     public authService: AuthService,
     public vaccineListService: VaccineListService,
-    private toast: NgToastService,
+    private notifier:AlertService,
     private companyService: CompanyService,
     private vaccineCompanyService: VaccineCompanyService
   ) {
@@ -46,6 +46,7 @@ export class VaccinesListComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.authService.getUser();
     if (this.authService.currentUser.userName === '') {
       this.NavigateHome();
     } else {
@@ -66,11 +67,7 @@ export class VaccinesListComponent implements OnInit {
         this.vaccineCompanies = res;
       },
       error: (e) => {
-        this.toast.error({
-          detail: '!!Oops',
-          summary: 'Something went wrong',
-          duration: 6000,
-        });
+        this.notifier.notifyError('Something went wrong');
       },
     });
   }
@@ -83,14 +80,9 @@ export class VaccinesListComponent implements OnInit {
     this.vaccineListService.searchVaccines(this.searchModel.name).subscribe({
       next: (res) => {
         this.vaccineCompanies = res;
-        console.log(res);
       },
       error: (e) => {
-        this.toast.error({
-          detail: '!!Oops',
-          summary: 'Something went wrong',
-          duration: 6000,
-        });
+        this.notifier.notifyError('Something went wrong');
       },
     });
   }
@@ -115,7 +107,7 @@ export class VaccinesListComponent implements OnInit {
     this.router.navigateByUrl('dailyReport');
   }
   logout() {
-    this.authService.currentUser = new User();
+    this.authService.logout();
   }
   addCompany() {
     const company = new Company();
@@ -124,11 +116,7 @@ export class VaccinesListComponent implements OnInit {
     company.companyCountry = this.addSelection;
     this.companyService.addCompany(company).subscribe({
       next: (res) => {
-        this.toast.success({
-          detail: 'Success',
-          summary: 'Company Addedd Successfully',
-          duration: 5000,
-        });
+        this.notifier.notifySuccess('Company Addedd Successfully')
         this.showCompanyForm = false;
         this.addName = '';
         this.addDetails = '';
@@ -136,29 +124,19 @@ export class VaccinesListComponent implements OnInit {
         this.getData();
       },
       error: (e) => {
-        this.toast.error({
-          detail: '!!Oops',
-          summary: 'Something went wrong',
-          duration: 5000,
-        });
+        this.notifier.notifyError('Something went wrong')
       },
     });
   }
   addVaccine() {
     const company = this.companies[Number(this.addSelection)];
-    console.warn(this.addSelection);
     const vaccine = new VaccineCompany();
     vaccine.company = company;
     vaccine.vaccineName = this.addName;
     vaccine.vaccineDetails = this.addDetails;
-    console.warn(vaccine);
     this.vaccineCompanyService.addVaccine(vaccine).subscribe({
       next: (res) => {
-        this.toast.success({
-          detail: 'Success',
-          summary: 'Vaccine Addedd Successfully',
-          duration: 5000,
-        });
+        this.notifier.notifySuccess('Vaccine Addedd Successfully')
         this.showVaccineForm = false;
         this.addName = '';
         this.addDetails = '';
@@ -166,11 +144,7 @@ export class VaccinesListComponent implements OnInit {
         this.Show();
       },
       error: (e) => {
-        this.toast.error({
-          detail: '!!Oops',
-          summary: 'Something went wrong',
-          duration: 5000,
-        });
+       this.notifier.notifyError("something went wrong")
       },
     });
   }

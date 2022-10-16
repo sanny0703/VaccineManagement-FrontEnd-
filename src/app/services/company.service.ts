@@ -1,26 +1,27 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { AppUtils } from '../model/AppUtils';
 import { Company } from '../model/Company';
 import { AuthService } from './auth.service';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class CompanyService {
-
-  myHeaders = { Authorization: 'B ' };
   constructor(private http: HttpClient, private authService: AuthService) {}
 
-  addCompany(company:Company){
-    this.myHeaders['Authorization'] = 'Bearer ' + this.authService.accessToken;
-    return this.http.post<Company>('http://localhost:8888/company/', company, {
-      headers: this.myHeaders,
-    });
+  addCompany(company: Company) {
+    return this.http.post<Company>(
+      AppUtils.API_ENDPOINT + '/company/',
+      company,
+      {
+        headers: { Authorization: 'Bearer ' + this.authService.accessToken },
+      }
+    );
   }
-  getCompanies(){
-    this.myHeaders['Authorization'] = 'Bearer ' + this.authService.accessToken;
-    return this.http.get<Company[]>('http://localhost:8888/company', {
-      headers: this.myHeaders,
+  getCompanies() {
+    return this.http.get<Company[]>(AppUtils.API_ENDPOINT + '/company', {
+      headers: { Authorization: 'Bearer ' + this.authService.accessToken },
     });
   }
 }

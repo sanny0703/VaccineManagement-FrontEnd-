@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 import { UsersViewService } from '../services/users-view.service';
 import { User } from '../model/User';
-import { NgToastService } from 'ng-angular-popup';
+import { AlertService } from '../services/alert.service';
 @Component({
   selector: 'app-view-registered-users',
   templateUrl: './view-registered-users.component.html',
@@ -19,12 +19,13 @@ export class ViewRegisteredUsersComponent implements OnInit {
     public viewService: UsersViewService,
     public router: Router,
     public authservice: AuthService,
-    private toast: NgToastService
+    private notifier: AlertService
   ) {
     this.data = new Array<User>();
   }
 
   ngOnInit(): void {
+    this.authservice.getUser();
     this.Show();
   }
   refreshPage() {
@@ -36,11 +37,7 @@ export class ViewRegisteredUsersComponent implements OnInit {
         this.data = res;
       },
       error: (e) => {
-        this.toast.error({
-          detail: '!!Oops',
-          summary: 'Something went wrong',
-          duration: 6000,
-        });
+        this.notifier.notifyError('Something went wrong');
       },
     });
   }
@@ -55,11 +52,7 @@ export class ViewRegisteredUsersComponent implements OnInit {
             this.data = res;
           },
           error: (e) => {
-            this.toast.error({
-              detail: '!!Oops',
-              summary: 'Something went wrong',
-              duration: 6000,
-            });
+            this.notifier.notifyError('Something went wrong');
           },
         });
     }
@@ -70,11 +63,7 @@ export class ViewRegisteredUsersComponent implements OnInit {
         this.Show();
       },
       error: (e) => {
-        this.toast.error({
-          detail: '!!Oops',
-          summary: 'Something went wrong',
-          duration: 6000,
-        });
+        this.notifier.notifyError('Something went wrong');
       },
     });
   }
@@ -97,6 +86,6 @@ export class ViewRegisteredUsersComponent implements OnInit {
     this.router.navigateByUrl('dailyReport');
   }
   logout() {
-    this.authservice.currentUser = new User();
+    this.authservice.logout();
   }
 }

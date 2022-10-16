@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { NgToastService } from 'ng-angular-popup';
 import { User } from '../model/User';
+import { AlertService } from '../services/alert.service';
 import { AuthService } from '../services/auth.service';
 
 @Component({
@@ -15,33 +15,29 @@ export class SignupComponent implements OnInit {
   constructor(
     public router: Router,
     public authService: AuthService,
-    private toast: NgToastService
+    private notifier: AlertService
   ) {
     this.myUser = new User();
   }
 
   ngOnInit(): void {}
   OnSubmit(signupform: any) {
-    this.myUser.userName = this.myUser.userName.replace(/\s*/g, ''); // removing spaces
     this.authService.signup(this.myUser).subscribe({
       next: (r) => {
+        if (r.body == null) {
+          // handling Bad Requests
+          this.notifier.notifyError('Please use valid Aadhar & Email');
+          return;
+        }
         this.NewForm(signupform);
-        this.toast.success({
-          detail: 'Success',
-          summary: 'Registration is Successful, Please LogIn',
-          duration: 6000,
-        });
+        this.notifier.notifySuccess('Registration is Successful, Please LogIn');
       },
       error: (e) => {
-        this.toast.error({
-          detail: 'Something went wrong',
-          summary: 'Use valid email & Aadhar',
-          duration: 6000,
-        });
+        this.notifier.notifyError('Something went wrong');
       },
     });
   }
-  NewForm(signupform: any) {
+  private NewForm(signupform: any) {
     signupform.form.markAsPristine();
     this.myUser = new User();
   }
@@ -52,23 +48,8 @@ export class SignupComponent implements OnInit {
   NavigateHome() {
     this.router.navigateByUrl('home');
   }
-  NavigateSlot() {
-    this.router.navigateByUrl('bookSlot');
-  }
-  NavigateVaccinesList() {
-    this.router.navigateByUrl('vaccineList');
-  }
-  NavigateViewRegistered() {
-    this.router.navigateByUrl('view_registered');
-  }
-  NavigateViewAll() {
-    this.router.navigateByUrl('view_all');
-  }
 
   refreshPage() {
     this.router.navigateByUrl('signup');
-  }
-  NavigateDailyReport() {
-    this.router.navigateByUrl('dailyReport');
   }
 }

@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { AppUtils } from '../model/AppUtils';
 import { User } from '../model/User';
 import { Vaccine } from '../model/vaccine';
 import { AuthService } from './auth.service';
@@ -8,38 +9,32 @@ import { AuthService } from './auth.service';
   providedIn: 'root',
 })
 export class UsersViewService {
-  myHeaders = { Authorization: 'B ' };
   constructor(private http: HttpClient, private authService: AuthService) {}
   getVaccinesAdministered() {
-    this.myHeaders['Authorization'] = 'Bearer ' + this.authService.accessToken;
-    return this.http.get<Vaccine[]>('http://localhost:8888/vaccine', {
-      headers: this.myHeaders,
+    return this.http.get<Vaccine[]>(AppUtils.API_ENDPOINT + '/vaccine', {
+      headers: { Authorization: 'Bearer ' + this.authService.accessToken },
     });
   }
   searchVaccinesByPatientName(name: any) {
-    this.myHeaders['Authorization'] = 'Bearer ' + this.authService.accessToken;
     return this.http.get<Vaccine[]>(
-      'http://localhost:8888/vaccine/patientName/' + name,
-      { headers: this.myHeaders }
+      AppUtils.API_ENDPOINT + '/vaccine/patientName/' + name,
+      { headers: { Authorization: 'Bearer ' + this.authService.accessToken } }
     );
   }
   getRegisteredUsers() {
-    this.myHeaders['Authorization'] = 'Bearer ' + this.authService.accessToken;
-    return this.http.get<User[]>('http://localhost:8888/user', {
-      headers: this.myHeaders,
+    return this.http.get<User[]>(AppUtils.API_ENDPOINT + '/user', {
+      headers: { Authorization: 'Bearer ' + this.authService.accessToken },
     });
   }
   searchRegisteredUsersByName(name: any) {
-    this.myHeaders['Authorization'] = 'Bearer ' + this.authService.accessToken;
     return this.http.get<User[]>(
-      'http://localhost:8888/user/userName/' + name,
-      { headers: this.myHeaders }
+      AppUtils.API_ENDPOINT + '/user/userName/' + name,
+      { headers: { Authorization: 'Bearer ' + this.authService.accessToken } }
     );
   }
   deleterUser(id: any) {
-    this.myHeaders['Authorization'] = 'Bearer ' + this.authService.accessToken;
-    return this.http.delete<User>('http://localhost:8888/user/' + id, {
-      headers: this.myHeaders,
+    return this.http.delete<User>(AppUtils.API_ENDPOINT + '/user/' + id, {
+      headers: { Authorization: 'Bearer ' + this.authService.accessToken },
     });
   }
 }
